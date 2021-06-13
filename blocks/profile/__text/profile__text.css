@@ -1,6 +1,18 @@
 .profile__text {
-    display: grid;
-    grid-template-columns: auto auto;
-    column-gap: 18px;
-    row-gap: 16px;
+    display: flex;
+    flex-direction: column;
+    max-width: max-content;
+    justify-content: center;
+}
+
+@media screen and (max-width: 720px) {
+    .profile__text {
+        margin-bottom: 36px;
+        display: flex;
+        flex-direction: column;
+        grid-template-columns: unset;
+        column-gap: unset;
+        row-gap: unset;
+        margin: 0 auto 36px auto;
+    }    
 }

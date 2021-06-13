@@ -1,7 +1,19 @@
 .header {
-    margin: 45px auto 0 auto;
+    margin: 45px auto 40px auto;
     max-width: 880px;
     border-bottom: solid 1px;
     border-color: #545454;
     max-height: 74px;
+}
+
+@media screen and  (max-width: 900px) {
+    .header {
+        margin: 45px 19px 40px  19px;
+    }
+}
+
+@media screen and  (max-width: 720px) {
+    .header {
+        margin: 28px 0 42px 0;
+    }
 }

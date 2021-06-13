@@ -8,11 +8,7 @@
 @media screen and (max-width: 720px) {
     .profile__text {
         margin-bottom: 36px;
-        display: flex;
-        flex-direction: column;
-        grid-template-columns: unset;
-        column-gap: unset;
-        row-gap: unset;
         margin: 0 auto 36px auto;
+        align-items: center;
     }    
 }

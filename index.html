@@ -32,42 +32,42 @@
                 <img class="element__image" src="images/vorkuta.jpg" alt="Воркута">
                 <div class="element__information">
                     <h3 class="element__title">Воркута</h3>
-                    <button class="element__like element__like_active" type="button"></button>
+                    <button class="element__like element__like_active" type="button" aria-label="Лайк"></button>
                 </div>
             </div>
             <div class="element">
                 <img class="element__image" src="images/kirov.jpg" alt="Киров">
                 <div class="element__information">
                     <h3 class="element__title">Киров</h3>
-                    <button class="element__like" type="button"></button>
+                    <button class="element__like" type="button" aria-label="Лайк"></button>
                 </div>
             </div>
             <div class="element">
                 <img class="element__image" src="images/vologda.jpg" alt="Вологда">
                 <div class="element__information">
                     <h3 class="element__title">Вологда</h3>
-                    <button class="element__like" type="button"></button>
+                    <button class="element__like" type="button" aria-label="Лайк"></button>
                 </div>
             </div>
             <div class="element">
                 <img class="element__image" src="images/moskva.jpg" alt="Москва">
                 <div class="element__information">
                     <h3 class="element__title">Москва</h3>
-                    <button class="element__like" type="button"></button>
+                    <button class="element__like" type="button" aria-label="Лайк"></button>
                 </div>
             </div>
             <div class="element">
                 <img class="element__image" src="images/batumi.jpg" alt="Батуми">
                 <div class="element__information">
                     <h3 class="element__title">Батуми</h3>
-                    <button class="element__like" type="button"></button>
+                    <button class="element__like" type="button" aria-label="Лайк"></button>
                 </div>
             </div>
             <div class="element">
                 <img class="element__image" src="images/karachaevsk.jpg" alt="Карачаевск">
                 <div class="element__information">
                     <h3 class="element__title">Карачаевск</h3>
-                    <button class="element__like" type="button"></button>
+                    <button class="element__like" type="button" aria-label="Лайк"></button>
                 </div>
             </div>
         </section>
@@ -76,14 +76,15 @@
     <footer class="footer">
         <p class="footer__copyright">&copy; 2020 Mesto Russia</p>
     </footer>
+
     <div class="popup">
         <div class="popup__container">
             <a class="popup__close-button"></a>
             <p class="popup__title">Редактировать профиль</p>
-            <form class="popup__form">
-                <input class="popup__form-field" type="text" placeholder="Жак-Ив Кусто">
-                <input class="popup__form-field" type="text" placeholder="Исследователь океана">
-                <button class="popup__form-button" type="button">Сохранить</button>
+            <form class="popup__form" name="profile-edit">
+                <input class="popup__form-field" type="text" placeholder="Жак-Ив Кусто" name="name">
+                <input class="popup__form-field" type="text" placeholder="Исследователь океана" name="description">
+                <button class="popup__form-button" type="submit">Сохранить</button>
             </form>
         </div>
     </div>

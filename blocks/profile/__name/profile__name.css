@@ -5,14 +5,12 @@
     margin: 0 0 16px 0;
     max-width: max-content;
     display: flex;
-    max-height: 39px;
 }
 
 @media screen and (max-width: 720px) {
     .profile__name {
         font-size: 27px;
-        line-height: 33px;
-        max-height: 26px;
+        line-height: 33px;  
         position: relative;
         max-width: 100%;
     }

@@ -7,6 +7,10 @@
     transition: .2s;
     align-self: flex-end;
     margin-left: 18px;
+    margin-bottom: 9px;
+    background-color: unset;
+    border: unset;
+    padding: 0;
 }
 
 .profile__edit-button:hover {

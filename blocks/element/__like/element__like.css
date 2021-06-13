@@ -8,6 +8,7 @@
     background-repeat: no-repeat;
     background-size: contain;
     transition: .2s;
+    padding: 0;
 }
 
 .element__like:hover {

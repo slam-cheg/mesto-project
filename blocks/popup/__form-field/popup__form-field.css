@@ -1,11 +1,15 @@
 .popup__form-field {
     border: none;
     border-bottom: 1px solid rgb(0 0 0 / 20%);
-    margin-bottom: 30px;
+    margin-bottom: 0;
     font-size: 14px;
     line-height: 17px;
     color: #000;
     padding-bottom: 13px;
+}
+
+.popup__form-field:first-of-type {
+    margin-bottom: 30px;
 }
 
 .popup__form-field::-webkit-input-placeholder {
@@ -18,4 +22,14 @@
 
 .popup__form-field:focus-visible {
     outline: none;
+}
+
+@media screen and (max-width:720px) {
+    .popup__form-field {
+        font-size: 14px;
+        line-height: 17px;
+    } 
+    .popup__form-field:first-of-type {
+        margin-bottom: 30px;
+    }
 }

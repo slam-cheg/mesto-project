@@ -9,6 +9,7 @@
     border-radius: 2px;
     transition: .2s;
     background-color: unset;
+    cursor: pointer;
 }
 
 .profile__add-button:hover {

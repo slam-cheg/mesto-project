@@ -1,0 +1,11 @@
+.profile__text_heading {
+    display: flex;
+    margin-bottom: 16px;
+    position: relative;
+}
+
+@media screen and (max-width:720px) {
+    .profile__text_heading {
+        margin-bottom: 14px;
+    }    
+}

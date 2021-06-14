@@ -9,6 +9,7 @@
     background-size: contain;
     transition: .2s;
     padding: 0;
+    cursor: pointer;
 }
 
 .element__like:hover {

@@ -19,54 +19,55 @@
             <div class="profile__information">
                 <img class="profile__avatar" src="images/Avatar.png" alt="Аватар">
                 <div class="profile__text">
-                    <h1 class="profile__name">Жак-Ив&nbsp;Кусто <button class="profile__edit-button"
-                            type="button"></button></h1>
-
-                    <h2 class="profile__description">Исследователь океана</h2>
+                    <div class="profile__text_heading">
+                        <h1 class="profile__name">Жак-Ив&nbsp;Кусто</h1>
+                        <button class="profile__edit-button" type="button"  aria-label="Редактировать"></button>
+                    </div>
+                    <P class="profile__description">Исследователь океана</p>
                 </div>
             </div>
-            <button class="profile__add-button" type="button"></button>
+            <button class="profile__add-button" type="button"  aria-label="Добавить"></button>
         </section>
         <section class="elements">
             <div class="element">
                 <img class="element__image" src="images/vorkuta.jpg" alt="Воркута">
                 <div class="element__information">
-                    <h3 class="element__title">Воркута</h3>
+                    <h2 class="element__title">Воркута</h2>
                     <button class="element__like element__like_active" type="button" aria-label="Лайк"></button>
                 </div>
             </div>
             <div class="element">
                 <img class="element__image" src="images/kirov.jpg" alt="Киров">
                 <div class="element__information">
-                    <h3 class="element__title">Киров</h3>
+                    <h2 class="element__title">Киров</h2>
                     <button class="element__like" type="button" aria-label="Лайк"></button>
                 </div>
             </div>
             <div class="element">
                 <img class="element__image" src="images/vologda.jpg" alt="Вологда">
                 <div class="element__information">
-                    <h3 class="element__title">Вологда</h3>
+                    <h2 class="element__title">Вологда</h2>
                     <button class="element__like" type="button" aria-label="Лайк"></button>
                 </div>
             </div>
             <div class="element">
                 <img class="element__image" src="images/moskva.jpg" alt="Москва">
                 <div class="element__information">
-                    <h3 class="element__title">Москва</h3>
+                    <h2 class="element__title">Москва</h2>
                     <button class="element__like" type="button" aria-label="Лайк"></button>
                 </div>
             </div>
             <div class="element">
                 <img class="element__image" src="images/batumi.jpg" alt="Батуми">
                 <div class="element__information">
-                    <h3 class="element__title">Батуми</h3>
+                    <h2 class="element__title">Батуми</h2>
                     <button class="element__like" type="button" aria-label="Лайк"></button>
                 </div>
             </div>
             <div class="element">
                 <img class="element__image" src="images/karachaevsk.jpg" alt="Карачаевск">
                 <div class="element__information">
-                    <h3 class="element__title">Карачаевск</h3>
+                    <h2 class="element__title">Карачаевск</h2>
                     <button class="element__like" type="button" aria-label="Лайк"></button>
                 </div>
             </div>
@@ -79,12 +80,13 @@
 
     <div class="popup">
         <div class="popup__container">
-            <a class="popup__close-button"></a>
-            <p class="popup__title">Редактировать профиль</p>
-            <form class="popup__form" name="profile-edit">
-                <input class="popup__form-field" type="text" placeholder="Жак-Ив Кусто" name="name">
-                <input class="popup__form-field" type="text" placeholder="Исследователь океана" name="description">
-                <button class="popup__form-button" type="submit">Сохранить</button>
+            <button class="popup__close-button" type="button" aria-label="Закрыть"></button>
+            <h3 class="popup__title">Редактировать профиль</h3>
+            <form class="popup__form" name="Profile-edit" name="edit-">
+                <input class="popup__form-field" type="text" placeholder="Жак-Ив Кусто" name="Profile-name">
+                <input class="popup__form-field" type="text" placeholder="Исследователь океана"
+                    name="Profile-description">
+                <button class="popup__form-button" type="submit" name="Submit-button">Сохранить</button>
             </form>
         </div>
     </div>

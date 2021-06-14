@@ -21,6 +21,7 @@
 @import url(../blocks/profile/__information/profile__information.css);
 @import url(../blocks/profile/__edit-button/profile__edit-button.css);
 @import url(../blocks/profile/__text/profile__text.css);
+@import url(../blocks/profile/__text/_heading/profile__text_heading.css);
 
 
 /* ELEMENTS */
@@ -49,3 +50,4 @@
 @import url(../blocks/popup/__form/popup__form.css);
 @import url(../blocks/popup/__form-field/popup__form-field.css);
 @import url(../blocks/popup/__form-button/popup__form-button.css);
+@import url(../blocks/popup/_opened/popup_opened.css);

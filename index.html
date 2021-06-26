@@ -21,7 +21,7 @@
                 <div class="profile__text">
                     <div class="profile__heading">
                         <h1 class="profile__name">Жак-Ив&nbsp;Кусто</h1>
-                        <button class="profile__edit-button" type="button"  aria-label="Редактировать"></button>
+                        <button class="profile__edit-button" type="button" aria-label="Редактировать" id="editButton"></button>
                     </div>
                     <P class="profile__description">Исследователь океана</p>
                 </div>
@@ -33,42 +33,42 @@
                 <img class="element__image" src="images/vorkuta.jpg" alt="Воркута">
                 <div class="element__information">
                     <h2 class="element__title">Воркута</h2>
-                    <button class="element__like element__like_active" type="button" aria-label="Лайк"></button>
+                    <button class="element__like" type="button" aria-label="Лайк" id="like"></button>
                 </div>
             </div>
             <div class="element">
                 <img class="element__image" src="images/kirov.jpg" alt="Киров">
                 <div class="element__information">
                     <h2 class="element__title">Киров</h2>
-                    <button class="element__like" type="button" aria-label="Лайк"></button>
+                    <button class="element__like" type="button" aria-label="Лайк" id="like"></button>
                 </div>
             </div>
             <div class="element">
                 <img class="element__image" src="images/vologda.jpg" alt="Вологда">
                 <div class="element__information">
                     <h2 class="element__title">Вологда</h2>
-                    <button class="element__like" type="button" aria-label="Лайк"></button>
+                    <button class="element__like" type="button" aria-label="Лайк" id="like"></button>
                 </div>
             </div>
             <div class="element">
                 <img class="element__image" src="images/moskva.jpg" alt="Москва">
                 <div class="element__information">
                     <h2 class="element__title">Москва</h2>
-                    <button class="element__like" type="button" aria-label="Лайк"></button>
+                    <button class="element__like" type="button" aria-label="Лайк" id="like"></button>
                 </div>
             </div>
             <div class="element">
                 <img class="element__image" src="images/batumi.jpg" alt="Батуми">
                 <div class="element__information">
                     <h2 class="element__title">Батуми</h2>
-                    <button class="element__like" type="button" aria-label="Лайк"></button>
+                    <button class="element__like" type="button" aria-label="Лайк" id="like"></button>
                 </div>
             </div>
             <div class="element">
                 <img class="element__image" src="images/karachaevsk.jpg" alt="Карачаевск">
                 <div class="element__information">
                     <h2 class="element__title">Карачаевск</h2>
-                    <button class="element__like" type="button" aria-label="Лайк"></button>
+                    <button class="element__like" type="button" aria-label="Лайк" id="like"></button>
                 </div>
             </div>
         </section>
@@ -78,9 +78,9 @@
         <p class="footer__copyright">&copy; 2020 Mesto Russia</p>
     </footer>
 
-    <div class="popup">
+    <div class="popup" id="popup">
         <div class="popup__container">
-            <button class="popup__close-button" type="button" aria-label="Закрыть"></button>
+            <button class="popup__close-button" type="button" aria-label="Закрыть" id="closeButton"></button>
             <h3 class="popup__title">Редактировать профиль</h3>
             <form class="popup__form" name="Profile-edit">
                 <input class="popup__form-field" type="text" placeholder="Жак-Ив Кусто" name="Profile-name">
@@ -90,6 +90,7 @@
             </form>
         </div>
     </div>
+<script src="index.js"></script>
 </body>
 
 </html>

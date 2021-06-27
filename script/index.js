@@ -1,15 +1,16 @@
 // ОТКРЫТИЕ И ЗАКРЫТИЕ POP-UP
 
 let popup = document.querySelector('.popup');
-let editButton = document.getElementById('editButton').addEventListener("click", openPopup);
-let closeButton = document.getElementById('closeButton').addEventListener("click", closePopup);
+let editButton = document.querySelector('.profile__edit-button').addEventListener("click", Popup);
+let closeButton = document.querySelector('.popup__close-button').addEventListener("click", Popup);
 
-function openPopup() {
-    popup.style.display = 'flex';
-};
-
-function closePopup() {
-    popup.style.display = 'none';
+function Popup() {
+    if (popup.style.display === 'flex'){
+        popup.style.display = 'none';
+    } 
+    else {
+        popup.style.display = 'flex';
+    }   
 };
 
 // ЛАЙКИ

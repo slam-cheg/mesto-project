@@ -24,32 +24,15 @@ document.onclick = function (event) {
     }
 }
 
-// TESTS
-
-const greetingMessageCreator = (name) => {
-    const greetingMessage = `Hello! ${name}`;
-    greeting(greetingMessage);
-}
-
-const greeting = (phrase) => {
-    alert(phrase);
-} 
-
-// greetingMessageCreator('JOPA'); 
-
-
-
-
-
-
 // ИМЯ ПРОФИЛЯ
+
 const profileSaveButton = document.querySelector('.popup__form-button').addEventListener("click", saveInformation);
 
 function saveInformation() {
     const profileNameSaved = document.querySelector('.profile__name'); // Имя записаное
     const profileDescriptionSaved = document.querySelector('.profile__description'); // Описание записаное
-    let profileNameOld = document.querySelector('.popup__form-field_name').value; // Имя в форме
-    let profileDescriptionOld = document.querySelector('.popup__form-field_job').value; // Описание в форме; 
+    const profileNameOld = document.querySelector('.popup__form-field_name').value; // Имя в форме
+    const profileDescriptionOld = document.querySelector('.popup__form-field_job').value; // Описание в форме; 
     
 
     profileNameSaved.textContent = profileNameOld;

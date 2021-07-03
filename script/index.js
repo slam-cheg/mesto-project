@@ -33,7 +33,6 @@ function saveInformation() {
     const profileDescriptionSaved = document.querySelector('.profile__description'); // Описание записаное
     const profileNameOld = document.querySelector('.popup__form-field_name').value; // Имя в форме
     const profileDescriptionOld = document.querySelector('.popup__form-field_job').value; // Описание в форме; 
-    
 
     profileNameSaved.textContent = profileNameOld;
     profileDescriptionSaved.textContent = profileDescriptionOld;

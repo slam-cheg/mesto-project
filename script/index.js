@@ -1,90 +1,90 @@
-// ОТКРЫТИЕ И ЗАКРЫТИЕ POP-UP
+// ОТКРЫТИЕ И ЗАКРЫТИЕ POP-UP'ов
 
-const popup = document.querySelector('.popup');
-const editButton = document.querySelector('.profile__edit-button').addEventListener("click", popupOpening);
-const closeButton = document.querySelector('.popup__close-button').addEventListener("click", popupOpening);
+const popupEdit = document.querySelector('.popup_edit'); // нахожу в документе попап редактирования профиля
+const editButton = document.querySelector('.profile__edit-button').addEventListener('click', popupEditFunction); // нахожу в документе кнопку редактирования профиля и добавляю слушатель событий по клику, который при клике запускает функцию открытия/закрытия попап
+const closeButtonEdit = document.querySelector('.popup__close-button_edit').addEventListener('click', popupEditFunction); // нахожу в документе кнопку закрытия попапа с редактированием профиля, добавляю к ней слушатель событий по клику, который при клике запускает функцию открытия/закрытия попап
 
-function popupOpening() {
-    if (popup.style.display === 'flex') {
-        popup.style.display = 'none';
+const popupAdd = document.querySelector('.popup_add'); // нахожу в документе попап добавления карточки места
+const plusButton = document.querySelector('.profile__add-button').addEventListener('click', popupAddFunction); // нахожу в документе кнопку открытия попапа добавления карточки места, добавляю слушателя событий, который при клике на кнопку запускает функцию открытия/закрытия попап добавления карточки
+const closeButtonAdd = document.querySelector('.popup__close-button_add').addEventListener('click', popupAddFunction); // нахожу в документе кнопку закрытия карточки попапа добавления карточки места, добавляю на нее слушателя событий, который при клике запускает функцию открытия/закрытия попап добавления карточки
+
+function popupEditFunction() { // создаю функцию открытия/закрытия попап редактирования профиля
+
+    if (popupEdit.className === 'popup_edit') { // задаю условие, что если у попапа в CSS прописан display: flex;
+        popupEdit.classList.toggle('popup_opened'); // то он меняется на display: none;
     }
     else {
-        popup.style.display = 'flex';
+        popupEdit.classList.toggle('popup_opened'); // а в обратном случае меняется на display: flex;
     }
 };
 
-// ЛАЙКИ
-
-document.onclick = function (event) {
-    if (event.target.className === 'element__like') {
-        event.target.classList.add('element__like_active');
+function popupAddFunction() { // создаю функцию открытия/закрытия попап добавления карточки места
+    if (popupAdd.className === 'popup_edit') { // задаю условие, что если у попапа в CSS прописан display: flex;
+        popupAdd.classList.toggle('popup_opened'); // то он меняется на display: none;
     }
     else {
-        event.target.classList.remove('element__like_active');
+        popupAdd.classList.toggle('popup_opened'); // а в обратном случае меняется на display: flex;
+    }
+};
+
+
+
+// ЛАЙКИ
+
+document.onclick = function (event) { // создаю функцию события в документе
+    if (event.target.className === 'element__like') { // пишу условие функции, что если у "цели" данного события класс равен element__like
+        event.target.classList.add('element__like_active'); // то у этой "цели" события добавляется новый класс element__like_active
+    }
+    else {
+        event.target.classList.remove('element__like_active'); // а если класс element__like_active уже есть, то он удаляется 
     }
 }
 
 // ИМЯ ПРОФИЛЯ
 
-const profileSaveButton = document.querySelector('.popup__form-button').addEventListener("click", saveInformation);
+const profileSaveButton = document.querySelector('.popup__form-button_edit').addEventListener('click', saveInformation); // нахожу в документе кнопку "сохранить", которая находится в попапе редактирования профиля и добавляю на нее слушатель событий, который при клике на кнопку запустит функцию сохранения информации
 
-function saveInformation() {
-    const profileNameSaved = document.querySelector('.profile__name'); // Имя записаное
-    const profileDescriptionSaved = document.querySelector('.profile__description'); // Описание записаное
-    const profileNameOld = document.querySelector('.popup__form-field_name').value; // Имя в форме
-    const profileDescriptionOld = document.querySelector('.popup__form-field_job').value; // Описание в форме; 
+function saveInformation() { // создаю функцию сохранения информации
+    const profileNameSaved = document.querySelector('.profile__name'); // Имя записаное по дефолту в разметке html
+    const profileDescriptionSaved = document.querySelector('.profile__description'); // Описание записаное по дефолту в разметке html
+    const profileNameOld = document.querySelector('.popup__form-field_name').value; // value имени в форме
+    const profileDescriptionOld = document.querySelector('.popup__form-field_job').value; // value описания в форме
 
-    profileNameSaved.textContent = profileNameOld;
-    profileDescriptionSaved.textContent = profileDescriptionOld;
+    profileNameSaved.textContent = profileNameOld; // контент дефолтного поля Имя теперь равняется value Имени в форме
+    profileDescriptionSaved.textContent = profileDescriptionOld; // контент дефолтного поля описания теперь равняется value описания в форме
 
-    popup.style.display = 'none';
+    popupEditFunction(); // функция сохранения информации отработала и при этом попап закрылся
 }
 
 //  ДОБАВЛЕНИЕ НОВЫХ КАРТОЧЕК
 
-/*
-function addCard(imageValue, imageTitle, titleValue,) {
-    const cardContainer = document.createElement('div');
-    cardContainer.classList.add('element');
+const cardsContainer = document.querySelector('.elements'); // нахожу в документе место, в которое добавляются все карточки
 
-    cardContainer.insertAdjacentHTML('beforeend', `
-    <div class="element">
-        <img class="element__image" src="${imageValue}" alt="${imageTitle}">
-        <div class="element__information">
-            <h2 class="element__title">${titleValue}</h2>
-            <button class="element__like" type="button" aria-label="Лайк" id="like"></button>
-        </div>
-    </div>
-  `);
-} */
- 
-// РЕНДЕР ДОБАВЛЕННЫХ КАРТОЧЕК
+const addButton = document.querySelector('.popup__form-button_add'); // нахожу в документе кнопку "сохранить", которая находится в попапе добавления карточки
+addButton.addEventListener('click', function () { // 
+    const title = document.querySelector('.popup__form-field_title');
+    const image = document.querySelector('.popup__form-field_image');
 
-/*
-function addSong(artistValue, titleValue) {
-    const trackContainer = document.createElement('div');
-    trackContainer.classList.add('song');
-  
-    const artistElement = document.createElement('h4');
-    artistElement.classList.add('song__artist');
-    artistElement.textContent = artistValue;
-  
-    const titleElement = document.createElement('h4');
-    titleElement.classList.add('song__title');
-    titleElement.textContent = titleElementtValue;
-  
-    const likeButtonElement = document.createElement('button');
-    likeButtonElement.classList.add('song__like');
-    likeButtonElement.textContent = likeButtonElement;
-  
-    songsContainer.insertAdjacentHTML('beforeend', `
-      <div class="song">
-        <h4 class="song__artist">${artistValue}</h4>
-        <p class="song__title">${titleValue}</p>
-        <button class="song__like"></button>
-      </div>
-    `);
-    
-    trackContainer.append(artistElement, titleElement, likeButtonElement);
-  }
-  */
+    addCard(title.value, image.value);
+
+    title.value = '';
+    image.value = '';
+});
+
+function addCard(сardTitle, cardImage) {
+    const cardTemplate = document.querySelector('#card-template').content;
+    const cardElement = cardTemplate.querySelector('.element').cloneNode(true);
+
+    cardElement.querySelector('.element__title').textContent = сardTitle;
+    cardElement.querySelector('.element__image').src = cardImage;
+    cardElement.querySelector('.element__image').alt = сardTitle;
+
+    addButton.addEventListener('submit', clearing); // добавил слушатель события "отправки формы" на кнопку "сохранить" которая запускает функцию очистки формы от введенных значений
+    function clearing() {    // создаю функцию очистки
+        document.querySelector('.popup__form_add').reset(); // нахожу в документе нужную форму и очищаю ее
+    };
+    popupAddFunction() // функция создания карточки отработала, попап закрывается
+    cardsContainer.append(cardElement); // создается новая карточка
+    clearing(); // поля формы очищаются уже после закрытия попапа и создания карточки
+};
+

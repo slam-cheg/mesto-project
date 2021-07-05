@@ -51,3 +51,6 @@
 @import url(../blocks/popup/__form-field/popup__form-field.css);
 @import url(../blocks/popup/__form-button/popup__form-button.css);
 @import url(../blocks/popup/_opened/popup_opened.css);
+@import url(../blocks/popup/__image/popup__image.css);
+@import url(../blocks/popup/popup__image-alt/popup__image-alt.css);
+@import url(../blocks/popup/__container/_clear/popup__container_clear.css);

@@ -1,0 +1,6 @@
+.popup__container_clear {
+    background-color: unset;
+    max-width: 75vw;
+    max-height: 75vh;
+    width: unset;
+}

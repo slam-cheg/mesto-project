@@ -150,9 +150,9 @@ const popupImage = document.querySelector('.popup__image');
 const popupImageDescription = document.querySelector('.popup__image-alt');
 
 function imageRender(event) {
-    let itemImage = event.target.src;
+    const itemImage = event.target.src;
     popupImage.src = itemImage;
-    let itemAlt = event.target.alt;
+    const itemAlt = event.target.alt;
     popupImageDescription.textContent = itemAlt
 
 }

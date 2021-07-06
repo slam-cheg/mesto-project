@@ -29,7 +29,7 @@ function popupAddFunction() { // создаю функцию открытия/з
 
 // ЛАЙКИ
 
-document.onclick = function (event) { // создаю функцию события в документе
+function likeHeart (event) { // создаю функцию события в документе
     if (event.target.className === 'element__like') { // пишу условие функции, что если у "цели" данного события класс равен element__like
         event.target.classList.add('element__like_active'); // то у этой "цели" события добавляется новый класс element__like_active
     }
@@ -37,23 +37,6 @@ document.onclick = function (event) { // создаю функцию событ�
         event.target.classList.remove('element__like_active'); // а если класс element__like_active уже есть, то он удаляется 
     }
 }
-
-// ИМЯ ПРОФИЛЯ
-
-const profileSaveButton = document.querySelector('.popup__form-button_edit').addEventListener('click', saveInformation); // нахожу в документе кнопку "сохранить", которая находится в попапе редактирования профиля и добавляю на нее слушатель событий, который при клике на кнопку запустит функцию сохранения информации
-
-function saveInformation() { // создаю функцию сохранения информации
-    const profileNameSaved = document.querySelector('.profile__name'); // Имя записаное по дефолту в разметке html
-    const profileDescriptionSaved = document.querySelector('.profile__description'); // Описание записаное по дефолту в разметке html
-    const profileNameOld = document.querySelector('.popup__form-field_name').value; // value имени в форме
-    const profileDescriptionOld = document.querySelector('.popup__form-field_job').value; // value описания в форме
-
-    profileNameSaved.textContent = profileNameOld; // контент дефолтного поля Имя теперь равняется value Имени в форме
-    profileDescriptionSaved.textContent = profileDescriptionOld; // контент дефолтного поля описания теперь равняется value описания в форме
-
-    popupEditFunction(); // функция сохранения информации отработала и при этом попап закрылся
-}
-
 
 
 const cardsContainer = document.querySelector('.elements'); // нахожу в документе место, в которое добавляются все карточки
@@ -97,6 +80,7 @@ initialCards.forEach(item => {
 
     cardElement.querySelector('.element__image').addEventListener('click', popupImageFunction);
     cardElement.querySelector('.element__image').addEventListener('click', imageRender);
+    cardElement.querySelector('.element__like').addEventListener('click', likeHeart);
 
     cardsContainer.append(cardElement)
 });
@@ -124,15 +108,38 @@ function addCard(сardTitle, cardImage) {
 
     cardElement.querySelector('.element__image').addEventListener('click', popupImageFunction);
     cardElement.querySelector('.element__image').addEventListener('click', imageRender);
+    cardElement.querySelector('.element__like').addEventListener('click', likeHeart);
 
     addButton.addEventListener('submit', clearing); // добавил слушатель события "отправки формы" на кнопку "сохранить" которая запускает функцию очистки формы от введенных значений
-    function clearing() {    // создаю функцию очистки
-        document.querySelector('.popup__form_add').reset(); // нахожу в документе нужную форму и очищаю ее
-    };
     popupAddFunction() // функция создания карточки отработала, попап закрывается
     cardsContainer.append(cardElement); // создается новая карточка
-    clearing(); // поля формы очищаются уже после закрытия попапа и создания карточки
+    clearing(); // поля формы очищаются уже после закрытия попапа и создания карточки   
 };
+
+
+// ОТПРАВКА ФОРМЫ // ИМЯ ПРОФИЛЯ
+
+
+const formEdit = document.querySelector('.popup__form_edit'); // Находим форму в DOM
+
+const nameInput = formEdit.querySelector('.popup__form-field_title');
+const jobInput = formEdit.querySelector('.popup__form-field_job');
+
+function formEditSubmitHandler (event) { // Обработчик «отправки» формы
+    event.preventDefault(); // Эта строчка отменяет стандартную отправку формы.
+
+const profileNameOld = formEdit.querySelector('.popup__form-field_name').value; // value имени в форме
+const profileDescriptionOld = formEdit.querySelector('.popup__form-field_job').value; // value описания в форме
+const profileNameSaved = document.querySelector('.profile__name'); // Имя записаное по дефолту в разметке html
+const profileDescriptionSaved = document.querySelector('.profile__description'); // Описание записаное по дефолту в разметке html
+
+profileNameSaved.textContent = profileNameOld; // контент дефолтного поля Имя теперь равняется value Имени в форме
+profileDescriptionSaved.textContent = profileDescriptionOld; // контент дефолтного поля описания теперь равняется value описания в форме
+
+popupEditFunction(); // функция сохранения информации отработала и при этом попап закрылся
+}
+
+formEdit.addEventListener('submit', formEditSubmitHandler); 
 
 // ОТКРЫТИЕ ПОПАП С ИЗОБРАЖЕНИЕМ
 

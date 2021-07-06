@@ -3,5 +3,12 @@
     border-radius: 10px;
     max-height: 370px;
     overflow: hidden;
+    position: relative;
+    transition: .2s;
+}
+
+.element:hover > .element__delete {
+    opacity: 1;
+    transition: .2s;
 }
 

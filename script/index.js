@@ -43,7 +43,7 @@ const cardsContainer = document.querySelector('.elements'); // нахожу в �
 
 // РЕНДЕР ГОТОВЫХ КАРТОЧЕК
 
-const initialCards = [  // Массив с данными для карточек "из коробки"
+const addedCards = [  // Массив с данными для карточек "из коробки"
     {
       name: 'Воркута',
       link: 'images/vorkuta.jpg'
@@ -70,7 +70,7 @@ const initialCards = [  // Массив с данными для карточе�
     }
   ]; 
 
-initialCards.forEach(item => {
+  addedCards.forEach(item => { 
     const cardTemplate = document.querySelector('#card-template').content;
     const cardElement = cardTemplate.querySelector('.element').cloneNode(true);
 
@@ -81,49 +81,50 @@ initialCards.forEach(item => {
     cardElement.querySelector('.element__image').addEventListener('click', popupImageFunction);
     cardElement.querySelector('.element__image').addEventListener('click', imageRender);
     cardElement.querySelector('.element__like').addEventListener('click', likeHeart);
+    cardElement.querySelector('.element__delete').addEventListener('click', deleting);
 
     cardsContainer.append(cardElement)
 });
 
-//  ДОБАВЛЕНИЕ НОВЫХ КАРТОЧЕК
+//  ДОБАВЛЕНИЕ НОВЫХ КАРТОЧЕК // ОТПРАВКА ФОРМЫ
 
-const addButton = document.querySelector('.popup__form-button_add'); // нахожу в документе кнопку "сохранить", которая находится в попапе добавления карточки
-addButton.addEventListener('click', function () { 
-    const title = document.querySelector('.popup__form-field_title');
-    const image = document.querySelector('.popup__form-field_image');
+const formAdd = document.querySelector('.popup__form_add'); // Находим форму в DOM
+const title = formAdd.querySelector('.popup__form-field_title');
+const image = formAdd.querySelector('.popup__form-field_image');
+
+function formAddSubmitHandler (event) { // Обработчик «отправки» формы
+    event.preventDefault(); // Эта строчка отменяет стандартную отправку формы.
+
+    function addCard(сardTitle, cardImage) { 
+        const cardTemplate = document.querySelector('#card-template').content;
+        const cardElement = cardTemplate.querySelector('.element').cloneNode(true);
+    
+        cardElement.querySelector('.element__title').textContent = сardTitle;
+        cardElement.querySelector('.element__image').src = cardImage;
+        cardElement.querySelector('.element__image').alt = сardTitle;
+    
+        cardElement.querySelector('.element__image').addEventListener('click', popupImageFunction);
+        cardElement.querySelector('.element__image').addEventListener('click', imageRender);
+        cardElement.querySelector('.element__like').addEventListener('click', likeHeart);
+        cardElement.querySelector('.element__delete').addEventListener('click', deleting);
+    
+        popupAddFunction() // функция создания карточки отработала, попап закрывается
+        cardsContainer.append(cardElement); // создается новая карточка
+           
+    };
 
     addCard(title.value, image.value);
-
     title.value = '';
     image.value = '';
-});
 
-function addCard(сardTitle, cardImage) {
-    const cardTemplate = document.querySelector('#card-template').content;
-    const cardElement = cardTemplate.querySelector('.element').cloneNode(true);
+}
 
-    cardElement.querySelector('.element__title').textContent = сardTitle;
-    cardElement.querySelector('.element__image').src = cardImage;
-    cardElement.querySelector('.element__image').alt = сardTitle;
+formAdd.addEventListener('submit', formAddSubmitHandler);
 
-    cardElement.querySelector('.element__image').addEventListener('click', popupImageFunction);
-    cardElement.querySelector('.element__image').addEventListener('click', imageRender);
-    cardElement.querySelector('.element__like').addEventListener('click', likeHeart);
-
-    addButton.addEventListener('submit', clearing); // добавил слушатель события "отправки формы" на кнопку "сохранить" которая запускает функцию очистки формы от введенных значений
-    popupAddFunction() // функция создания карточки отработала, попап закрывается
-    cardsContainer.append(cardElement); // создается новая карточка
-    clearing(); // поля формы очищаются уже после закрытия попапа и создания карточки   
-};
-
-
-// ОТПРАВКА ФОРМЫ // ИМЯ ПРОФИЛЯ
+// РЕДАКТИРОВАНИЕ ПРОФИЛЯ // ОТПРАВКА ФОРМЫ
 
 
 const formEdit = document.querySelector('.popup__form_edit'); // Находим форму в DOM
-
-const nameInput = formEdit.querySelector('.popup__form-field_title');
-const jobInput = formEdit.querySelector('.popup__form-field_job');
 
 function formEditSubmitHandler (event) { // Обработчик «отправки» формы
     event.preventDefault(); // Эта строчка отменяет стандартную отправку формы.
@@ -139,7 +140,7 @@ profileDescriptionSaved.textContent = profileDescriptionOld; // контент �
 popupEditFunction(); // функция сохранения информации отработала и при этом попап закрылся
 }
 
-formEdit.addEventListener('submit', formEditSubmitHandler); 
+formEdit.addEventListener('submit', formEditSubmitHandler); //
 
 // ОТКРЫТИЕ ПОПАП С ИЗОБРАЖЕНИЕМ
 
@@ -164,3 +165,11 @@ function popupImageFunction() {
         popupWithImage.classList.toggle('popup_opened');
     }
 };
+
+// УДАЛЕНИЕ КАРТОЧЕК
+
+function deleting(event) {
+    const bucket = event.target;
+    const deletingItem = bucket.parentElement;
+    deletingItem.remove();
+}

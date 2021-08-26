@@ -43,9 +43,9 @@
             <h3 class="popup__title">Редактировать профиль</h3>
             <form class="popup__form popup__form_edit" name="Profile-edit">
                 <input class="popup__form-field popup__form-field_name" type="text" placeholder="Введите имя"
-                    value="Жак-Ив Кусто" name="Profile-name">
+                    value="" name="Profile-name" required>
                 <input class="popup__form-field popup__form-field_job" type="text" placeholder="Ваш род занятий"
-                    value="Исследователь океана" name="Profile-description">
+                    value="" name="Profile-description" required>
                 <button class="popup__form-button popup__form-button_edit" type="submit"
                     name="Submit-button">Сохранить</button>
             </form>
@@ -58,9 +58,9 @@
             <h3 class="popup__title">Новое Место</h3>
             <form class="popup__form popup__form_add" name="card-add">
                 <input class="popup__form-field popup__form-field_title" type="text" placeholder="Название"
-                    name="card-title">
-                <input class="popup__form-field popup__form-field_image" type="text" placeholder="Ссылка на картинку"
-                    name="card-image">
+                    name="card-title" required>
+                <input class="popup__form-field popup__form-field_image" type="url" placeholder="Ссылка на картинку"
+                    name="card-image" required>
                 <button class="popup__form-button popup__form-button_add" type="submit"
                     name="Submit-button">Сохранить</button>
             </form>
@@ -70,15 +70,15 @@
     <div class="popup popup_img">
         <div class="popup__container popup__container_clear">
             <button class="popup__close-button popup__close-button_img" type="button" aria-label="Закрыть"></button>
-            <img class="popup__image">
+            <img class="popup__image" src="#" alt="#">
             <p class="popup__image-alt"></p>
         </div>
     </div>
 
     <template id="card-template">
         <div class="element">
-            <img class="element__delete" src="images/bucket.svg">
-            <img class="element__image">
+            <button class="element__delete" type="button"></button>
+            <img class="element__image" src="#" alt="#">
             <div class="element__information-bg">
                 <div class="element__information">
                     <h2 class="element__title"></h2>

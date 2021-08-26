@@ -1,175 +1,172 @@
-// ОТКРЫТИЕ И ЗАКРЫТИЕ POP-UP'ов
+// ОБЪЯВЛЕНИЕ ВСЕХ ПЕРЕМЕННЫХ
 
-const popupEdit = document.querySelector('.popup_edit'); // нахожу в документе попап редактирования профиля
-const editButton = document.querySelector('.profile__edit-button').addEventListener('click', popupEditFunction); // нахожу в документе кнопку редактирования профиля и добавляю слушатель событий по клику, который при клике запускает функцию открытия/закрытия попап
-const closeButtonEdit = document.querySelector('.popup__close-button_edit').addEventListener('click', popupEditFunction); // нахожу в документе кнопку закрытия попапа с редактированием профиля, добавляю к ней слушатель событий по клику, который при клике запускает функцию открытия/закрытия попап
+// попап редактирования профиля
+const popupEdit = document.querySelector('.popup_edit'); // нашел в документе попап редактирования профиля
+const editButton = document.querySelector('.profile__edit-button'); // нашел в документе кнопку которая открывает попап редактирования профиля
+const closeButtonEdit = document.querySelector('.popup__close-button_edit'); // нашел в документе кнопку которая закрывает попап редактирования профиля
+const formEdit = document.querySelector('.popup__form_edit'); // Нахожу форму редактирования профиля
+const profileNameSaved = document.querySelector('.profile__name'); // нахожу имя профиля записаное по дефолту в разметке html
+const profileDescriptionSaved = document.querySelector('.profile__description'); // нахожу описание профиля записаное по дефолту в разметке html
+const profileNameOld = formEdit.querySelector('.popup__form-field_name');  // нашел поле имени в форме редактирования и прировнял его value к тексту имени в html разметке
+const profileDescriptionOld = formEdit.querySelector('.popup__form-field_job');  // нашел поле описания в форме редактирования и прировнял его value к тексту описания в html разметке
 
-const popupAdd = document.querySelector('.popup_add'); // нахожу в документе попап добавления карточки места
-const plusButton = document.querySelector('.profile__add-button').addEventListener('click', popupAddFunction); // нахожу в документе кнопку открытия попапа добавления карточки места, добавляю слушателя событий, который при клике на кнопку запускает функцию открытия/закрытия попап добавления карточки
-const closeButtonAdd = document.querySelector('.popup__close-button_add').addEventListener('click', popupAddFunction); // нахожу в документе кнопку закрытия карточки попапа добавления карточки места, добавляю на нее слушателя событий, который при клике запускает функцию открытия/закрытия попап добавления карточки
+// попап добавления карточек
+const popupAdd = document.querySelector('.popup_add'); // нашел в документе попап добавления карточки
+const addButton = document.querySelector('.profile__add-button'); // нашел в документе кнопку которая открывает попап добавления карточки
+const closeButtonAdd = document.querySelector('.popup__close-button_add'); // нашел в документе кнопку которая закрывает попап добавления карточки
+const formAdd = document.querySelector('.popup__form_add'); // Нахожу форму добавления карточки
+const title = formAdd.querySelector('.popup__form-field_title'); // Нахожу в форме поле названия карточки
+const image = formAdd.querySelector('.popup__form-field_image'); // Нахожу в форме поле ссылки на картинку
 
-function popupEditFunction() { // создаю функцию открытия/закрытия попап редактирования профиля
+// попап открытия больших изображений
+const popupGallery = document.querySelector('.popup_img'); // нашел в документе попап открытия большого изображения
+const popupImageClose = document.querySelector('.popup__close-button_img'); // нашел в документе внопку которая закрывает попап с большой картинкой
+const popupImage = document.querySelector('.popup__image'); // нашел в документе тег отвечающий за само изображение в попапе 
+const popupImageDescription = document.querySelector('.popup__image-alt'); // нашел в документе поле в котором должен отображаться Alt открывшегося изображения
 
-    if (popupEdit.className === 'popup_edit') { // задаю условие, что если попап имеет такой класс
-        popupEdit.classList.toggle('popup_opened'); // то он добалвляет себе новый класс
-    }
-    else {
-        popupEdit.classList.toggle('popup_opened'); // а в обратном случае удаяет
-    }
+// переменные для рендера карточек "из коробки" и новых
+const cardsContainer = document.querySelector('.elements'); // нахожу в документе место, в которое добавляются все карточки
+const cardTemplate = document.querySelector('#card-template').content; // нахожу в документе шаблонную разметку для карточек
+
+
+
+// ВСЕ СЛУШАТЕЛИ СОБЫТИЙ
+
+addButton.addEventListener('click', () => openPopup(popupAdd)); // на кнопку "плюс" добавил слушатель событий который при клике запускает функцию с параметром currentPopup
+closeButtonAdd.addEventListener('click', () => closePopup(popupAdd)) // на кнопку закрытия попапа редактирования добавил слушатель событий который запускает функцию закрытия попап
+editButton.addEventListener('click', () => reWrite()); // на кнопку "карандашик" добавил слушатель событий который при клике запускает функцию открытия попап с предварительной подгрузкой значений в поля
+closeButtonEdit.addEventListener('click', () => closePopup(popupEdit)); // на кнопку закрытия попапа редактирования добавил слушатель событий который запускает функцию закрытия попап
+popupImageClose.addEventListener('click', () => closePopup(popupGallery)); // на кнопку закрытия попапа редактирования добавил слушатель событий который запускает функцию закрытия попап
+formAdd.addEventListener('submit', handlerAddFormSubmit); // Для формы добавления карточек добавил слушателя событий запускает функцию отправки формы при клике на кнопку сохранить
+formEdit.addEventListener('submit', handlerEditFormSubmit); // Для формы редактирования добавил слушателя событий запускает функцию отправки формы при клике на кнопку сохранить
+
+// ФУНКЦИЯ ПОДГРУЖАЕТ ЗНАЧЕНИЯ ИМЕНИ И ОПИСАНИЯ ПРОФИЛЯ В POP-UP
+
+function reWrite() {
+    profileNameOld.value = profileNameSaved.textContent;
+    profileDescriptionOld.value = profileDescriptionSaved.textContent;
+    openPopup(popupEdit);
+}
+
+// ФУНКЦИИ ОТКРЫТИЯ И ЗАКРЫТИЯ POP-UP'ов
+
+function openPopup(currentPopup) { // функция открытия попапов
+    currentPopup.classList.toggle('popup_opened'); // переключение класса у текущего попап
+};
+function closePopup(currentPopup) { // функция закрытия попапов
+    currentPopup.classList.toggle('popup_opened'); // переключение класса у текущего попап
 };
 
-function popupAddFunction() { // создаю функцию открытия/закрытия попап добавления карточки места
-    if (popupAdd.className === 'popup_edit') { // задаю условие, что если попап имеет такой класс
-        popupAdd.classList.toggle('popup_opened'); // то он добалвляет себе новый класс
-    }
-    else {
-        popupAdd.classList.toggle('popup_opened'); // а в обратном случае удаяет
-    }
-};
 
 // ЛАЙКИ
 
-function likeHeart (event) { // создаю функцию события в документе
-    if (event.target.className === 'element__like') { // пишу условие функции, что если у "цели" данного события класс равен element__like
-        event.target.classList.add('element__like_active'); // то у этой "цели" события добавляется новый класс element__like_active
-    }
-    else {
-        event.target.classList.remove('element__like_active'); // а если класс element__like_active уже есть, то он удаляется 
-    }
+function addLike(event) { // создаю функцию события в документе
+    event.target.classList.toggle('element__like_active');  // у "цели" события переключается класс
 }
-
-
-const cardsContainer = document.querySelector('.elements'); // нахожу в документе место, в которое добавляются все карточки
 
 // РЕНДЕР ГОТОВЫХ КАРТОЧЕК
 
-const addedCards = [  // Массив с данными для карточек "из коробки"
+addedCards = [  // Массив с данными для карточек "из коробки"
     {
-      name: 'Воркута',
-      link: 'images/vorkuta.jpg'
+        name: 'Воркута',
+        link: 'images/vorkuta.jpg'
     },
     {
-      name: 'Киров',
-      link: 'images/kirov.jpg'
+        name: 'Киров',
+        link: 'images/kirov.jpg'
     },
     {
-      name: 'Вологда',
-      link: 'images/vologda.jpg'
+        name: 'Вологда',
+        link: 'images/vologda.jpg'
     },
     {
-      name: 'Москва',
-      link: 'images/moskva.jpg'
+        name: 'Москва',
+        link: 'images/moskva.jpg'
     },
     {
-      name: 'Батуми',
-      link: 'images/batumi.jpg'
+        name: 'Батуми',
+        link: 'images/batumi.jpg'
     },
     {
-      name: 'Карачаевск',
-      link: 'images/karachaevsk.jpg'
+        name: 'Карачаевск',
+        link: 'images/karachaevsk.jpg'
     }
-  ]; 
+];
 
-  addedCards.forEach(item => { 
-    const cardTemplate = document.querySelector('#card-template').content;
-    const cardElement = cardTemplate.querySelector('.element').cloneNode(true);
-
-    cardElement.querySelector('.element__title').textContent = item.name;
-    cardElement.querySelector('.element__image').src = item.link;
-    cardElement.querySelector('.element__image').alt = item.name;
-
-    cardElement.querySelector('.element__image').addEventListener('click', popupImageFunction);
-    cardElement.querySelector('.element__image').addEventListener('click', imageRender);
-    cardElement.querySelector('.element__like').addEventListener('click', likeHeart);
-    cardElement.querySelector('.element__delete').addEventListener('click', deleting);
-
-    cardsContainer.append(cardElement)
+addedCards.reverse().forEach(item => { // перебор массива в обратном порядке, чтобы карточки создавались в том порядке в котором записаны в массив
+    cardTitle = item.name; // приравниваю поле имени в массиве к названию карточки и alt изображения
+    cardImage = item.link; // приравниваю ссылку на изображение к изображению в карточке
+    createCard(cardTitle, cardImage); // запускаю функцию создания карточки для каждого "прохода" по массиву, пока он не закончится
+    addCard(cardTitle, cardImage);
 });
 
-//  ДОБАВЛЕНИЕ НОВЫХ КАРТОЧЕК // ОТПРАВКА ФОРМЫ
+// СОЗДАНИЕ КАРТОЧЕК
 
-const formAdd = document.querySelector('.popup__form_add'); // Находим форму в DOM
-const title = formAdd.querySelector('.popup__form-field_title');
-const image = formAdd.querySelector('.popup__form-field_image');
+function createCard(сardTitle, cardImage) { // функция создания карточек с 2 параметрами
+    const cardElement = cardTemplate.querySelector('.element').cloneNode(true); //нахожу в шаблоне нужную разметку и копирую ее
 
-function formAddSubmitHandler (event) { // Обработчик «отправки» формы
-    event.preventDefault(); // Эта строчка отменяет стандартную отправку формы.
+    cardElement.querySelector('.element__title').textContent = сardTitle; // записываю параметр заголовка в соответствующий тег разметки html
+    cardElement.querySelector('.element__image').src = cardImage; // записываю параметр изображения в соответствующий тег разметки html
+    cardElement.querySelector('.element__image').alt = сardTitle; // записываю параметр заголовка в alt изображения 
 
-    function addCard(сardTitle, cardImage) { 
-        const cardTemplate = document.querySelector('#card-template').content;
-        const cardElement = cardTemplate.querySelector('.element').cloneNode(true);
-    
-        cardElement.querySelector('.element__title').textContent = сardTitle;
-        cardElement.querySelector('.element__image').src = cardImage;
-        cardElement.querySelector('.element__image').alt = сardTitle;
-    
-        cardElement.querySelector('.element__image').addEventListener('click', popupImageFunction);
-        cardElement.querySelector('.element__image').addEventListener('click', imageRender);
-        cardElement.querySelector('.element__like').addEventListener('click', likeHeart);
-        cardElement.querySelector('.element__delete').addEventListener('click', deleting);
-    
-        popupAddFunction() // функция создания карточки отработала, попап закрывается
-        cardsContainer.append(cardElement); // создается новая карточка
-           
-    };
+    //для каждой добавляемой карточки добавляю слушетелей событий
+    cardElement.querySelector('.element__image').addEventListener('click', () => openPopup(popupGallery)); // запускает открытие попапа с большим изображением по клику на картинку
+    cardElement.querySelector('.element__image').addEventListener('click', renderingImage); // запускает функцию приравнивания картинки в карточке к картинке в попапе с большим изображением
+    cardElement.querySelector('.element__like').addEventListener('click', addLike); // ставит и убирает лайки
+    cardElement.querySelector('.element__delete').addEventListener('click', deleting); // удаляет карточку из html разметки
 
-    addCard(title.value, image.value);
-    title.value = '';
-    image.value = '';
+    return cardElement;
+};
 
+// ДОБАВЛЕНИЕ СОЗДАННЫХ КАРТОЧЕК В РАЗМЕТКУ
+
+function addCard() { // функция создания карточек
+    const card = createCard(cardTitle, cardImage);
+    cardsContainer.prepend(card); // создаю карточку с записанными данными в параметр cardElement
 }
 
-formAdd.addEventListener('submit', formAddSubmitHandler);
+
+//  ОТПРАВКА ФОРМЫ
+
+function handlerAddFormSubmit(event) { // Обработчик «отправки» формы
+    event.preventDefault(); // Эта строчка отменяет стандартную отправку формы.
+
+    cardTitle = title.value; // приравниваю записанное значение поля залоговка к параметру фунции создания карточки
+    cardImage = image.value; // приравниваю записанное значение поля ссылки к параметру функции создания карточки
+
+    addCard(cardTitle, cardImage); // запускается функция создания карточки и добавления в DOM
+    closePopup(popupAdd); // форма была отправлена, попап закрывается
+    event.target.reset(); // поля формы очищаются после закрытия попап
+}
+
 
 // РЕДАКТИРОВАНИЕ ПРОФИЛЯ // ОТПРАВКА ФОРМЫ
 
-
-const formEdit = document.querySelector('.popup__form_edit'); // Находим форму в DOM
-
-function formEditSubmitHandler (event) { // Обработчик «отправки» формы
+function handlerEditFormSubmit(event) { // Обработчик «отправки» формы
     event.preventDefault(); // Эта строчка отменяет стандартную отправку формы.
 
-const profileNameOld = formEdit.querySelector('.popup__form-field_name').value; // value имени в форме
-const profileDescriptionOld = formEdit.querySelector('.popup__form-field_job').value; // value описания в форме
-const profileNameSaved = document.querySelector('.profile__name'); // Имя записаное по дефолту в разметке html
-const profileDescriptionSaved = document.querySelector('.profile__description'); // Описание записаное по дефолту в разметке html
+    profileNameSaved.textContent = profileNameOld.value; // контент дефолтного поля Имя теперь равняется value Имени в форме
+    profileDescriptionSaved.textContent = profileDescriptionOld.value; // контент дефолтного поля описания теперь равняется value описания в форме
 
-profileNameSaved.textContent = profileNameOld; // контент дефолтного поля Имя теперь равняется value Имени в форме
-profileDescriptionSaved.textContent = profileDescriptionOld; // контент дефолтного поля описания теперь равняется value описания в форме
-
-popupEditFunction(); // функция сохранения информации отработала и при этом попап закрылся
+    closePopup(popupEdit); // функция сохранения информации отработала и при этом попап закрылся, очистки формы не происходит, т.к. в данном случае нет
 }
 
-formEdit.addEventListener('submit', formEditSubmitHandler); //
+
 
 // ОТКРЫТИЕ ПОПАП С ИЗОБРАЖЕНИЕМ
 
-const popupWithImage = document.querySelector('.popup_img');
-const popupImageClose = document.querySelector('.popup__close-button_img').addEventListener('click', popupImageFunction);
-const popupImage = document.querySelector('.popup__image');
-const popupImageDescription = document.querySelector('.popup__image-alt');
-
-function imageRender(event) {
-    const itemImage = event.target.src;
-    popupImage.src = itemImage;
-    const itemAlt = event.target.alt;
-    popupImageDescription.textContent = itemAlt
-
+function renderingImage(event) { // Функция события открывающаяся по клику на изображения в карточках
+    const itemImage = event.target; // "цель" данного события записываю в переменную
+    popupImage.src = itemImage.src; // приравниваю значения SRC у картинки в карточке и у открывшейся картинки.
+    const itemAlt = event.target.alt; // значение alt тега у "цели" события записываю в переменную
+    popupImageDescription.textContent = itemAlt; // значение подписи под фотографией теперь то же что и alt изображения который в свою очередь всегда равен названию карточки
+    popupImage.alt = itemAlt; // значение alt у открывшейся картинки подставляется из значения alt той картинки на которую кликнули
 }
-
-function popupImageFunction() {
-    if (popupWithImage.className === 'popup_edit') {
-        popupWithImage.classList.toggle('popup_opened');
-    }
-    else {
-        popupWithImage.classList.toggle('popup_opened');
-    }
-};
 
 // УДАЛЕНИЕ КАРТОЧЕК
 
-function deleting(event) {
-    const bucket = event.target;
-    const deletingItem = bucket.parentElement;
-    deletingItem.remove();
+function deleting(event) { // создаю функцию события которая запускается при клике на элемент "мусорка"
+    const bucket = event.target; // записываю "цель" события в переменную
+    const deletingItem = bucket.closest('.element'); // записываю ближайший родительский Div в переменную
+    deletingItem.remove(); // удаляю карточку
 }

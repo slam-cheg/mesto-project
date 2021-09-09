@@ -29,11 +29,21 @@ const popupImageDescription = document.querySelector('.popup__image-alt'); // н
 // попап подтверждения удаления карточки 
 const popupConfirm = document.querySelector('.popup_confirm'); // нашел попап подтвержения удаления
 const confirmButton = popupConfirm.querySelector('.popup__confirm-button'); // кнопка подтверждения удаления
-const closeButtonConfirm = popupConfirm.querySelector('.popup__close-button_confirm');
+const closeButtonConfirm = popupConfirm.querySelector('.popup__close-button_confirm'); // кнопка закрытия попапа удаления
+let deletingItem; // сюда будут записываться удаляемые карточки при открытии попапа подтверждения
 
 // переменные для рендера карточек "из коробки" и новых
 const cardsContainer = document.querySelector('.elements'); // нахожу в документе место, в которое добавляются все карточки
 const cardTemplate = document.querySelector('#card-template').content; // нахожу в документе шаблонную разметку для карточек
+
+// попап редактирования аватара
+const avatarOld = document.querySelector('.profile__avatar'); // аватар который изначально в документе
+const avatarCover = document.querySelector('.profile__image-cover');
+const popupAvatar = document.querySelector('.popup_avatar-edit'); // нашел попап редактирования аватара
+const formAvatar = popupAvatar.querySelector('.popup__form_avatar-edit'); // нашел форму редактирования аватара
+const avatarInput = formAvatar.querySelector('.popup__form-field_avatar-edit'); // нашел поле в форме отвечающее за ссылку на новый аватар
+const avatarSubmit = formAvatar.querySelector('.popup__form-button_avatar-edit'); // сабмит кнопка в форме редактирования аватара
+const closeButtonAvatar = popupAvatar.querySelector('.popup__close-button_avatar-edit');
 
 
 
@@ -46,8 +56,22 @@ closeButtonEdit.addEventListener('click', () => closePopup(popupEdit)); // на 
 popupImageClose.addEventListener('click', () => closePopup(popupGallery)); // на кнопку закрытия попапа редактирования добавил слушатель событий который запускает функцию закрытия попап
 formAdd.addEventListener('submit', handlerAddFormSubmit); // Для формы добавления карточек добавил слушателя событий запускает функцию отправки формы при клике на кнопку сохранить
 formEdit.addEventListener('submit', handlerEditFormSubmit); // Для формы редактирования добавил слушателя событий запускает функцию отправки формы при клике на кнопку сохранить
-
+confirmButton.addEventListener('click', deleting)
 closeButtonConfirm.addEventListener('click', () => closePopup(popupConfirm)); // закроется только попап продтверждения
+avatarCover.addEventListener('click', () => openPopup(popupAvatar));
+closeButtonAvatar.addEventListener('click', () => closePopup(popupAvatar));
+formAvatar.addEventListener('submit', handlerAvatarFormSubmit);
+
+// ФУНКЦИЯ ЗАМЕНЫ АВАТАРА
+
+function handlerAvatarFormSubmit(event) {
+    event.preventDefault(); // Эта строчка отменяет стандартную отправку формы.
+
+    const newAvatar = avatarInput.value; // приравниваю записанное значение поля залоговка к параметру фунции создания карточки
+    avatarOld.src = newAvatar;
+
+    closePopup(popupAvatar); // форма была отправлена, попап закрывается
+}
 
 // ФУНКЦИЯ ПОДГРУЖАЕТ ЗНАЧЕНИЯ ИМЕНИ И ОПИСАНИЯ ПРОФИЛЯ В POP-UP
 
@@ -151,29 +175,14 @@ function renderingImage(event) { // Функция события открыва
 
 // УДАЛЕНИЕ КАРТОЧЕК
 
-/*
-function deleting(event) { // создаю функцию события которая запускается при клике на элемент "мусорка"
-    const bucket = event.target; // записываю "цель" события в переменную
-    const deletingItem = bucket.closest('.element'); // записываю ближайший родительский Div в переменную
-    
-}
-*/
-
 function confirming(event) {
     const bucket = event.target; // записываю "цель" события в переменную
-    const deletingItem = bucket.closest('.element'); // записываю ближайший родительский Div в переменную
+    deletingItem = bucket.closest('.element'); // записываю ближайший родительский Div в переменную
 
     openPopup(popupConfirm);
-
-    confirmButton.addEventListener('click', deleting(deletingItem));
-    
 }
 
-
-// 1. клик по мусорке записывает ближайшую к ней карточку
-// 2. открывается попап
-// 3. клик по кнопке "ДА" запускает удаление 1 пункта из DOM.
-
-function deleting(deletingItem) {
+function deleting() {
     deletingItem.remove(); // удаляю карточку
+    closePopup(popupConfirm);
 }

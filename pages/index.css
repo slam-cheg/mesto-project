@@ -22,6 +22,8 @@
 @import url(../blocks/profile/__edit-button/profile__edit-button.css);
 @import url(../blocks/profile/__text/profile__text.css);
 @import url(../blocks/profile/__heading/profile__heading.css);
+@import url(../blocks/profile/__image-wrapper/profile__image-wrapper.css);
+@import url(../blocks/profile/__image-cover/profile__image-cover.css);
 
 
 /* ELEMENTS */
@@ -57,3 +59,4 @@
 @import url(../blocks/popup/__container/_clear/popup__container_clear.css);
 @import url(../blocks/popup/__confirm-button/popup__confirm-button.css);
 @import url(../blocks/popup/__title/_confirm/popup__title_confirm.css);
+@import url(../blocks/popup/__form-field/_avatar-edit/popup__form-field_avatar-edit.css);

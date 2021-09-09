@@ -1,0 +1,22 @@
+{
+  "name": "yandex_praktikum",
+  "version": "0.0.1",
+  "description": "Третья проектная работа на курсе Веб-разработчик плюс.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/slam-cheg/mesto-project.git"
+  },
+  "author": "Lev Shushkov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/slam-cheg/mesto-project/issues"
+  },
+  "homepage": "https://github.com/slam-cheg/mesto-project#readme"
+}

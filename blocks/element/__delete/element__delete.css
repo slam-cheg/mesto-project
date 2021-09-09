@@ -1,4 +1,7 @@
 .element__delete {
+    visibility: hidden;
+    opacity: 0;
+    transition: .3s;
     width: 18px;
     position: absolute;
     right: 15px;
@@ -11,4 +14,10 @@
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+}
+
+.element:hover > .element__delete {
+    visibility: visible;
+    opacity: 1;
+    transition: .3s;
 }

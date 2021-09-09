@@ -42,8 +42,8 @@
             <button class="popup__close-button popup__close-button_edit" type="button" aria-label="Закрыть"></button>
             <h3 class="popup__title">Редактировать профиль</h3>
             <form class="popup__form popup__form_edit" name="Profile-edit">
-                <input class="popup__form-field popup__form-field_name" type="text" placeholder="Введите имя"
-                    value="" name="Profile-name" required>
+                <input class="popup__form-field popup__form-field_name" type="text" placeholder="Введите имя" value=""
+                    name="Profile-name" required>
                 <input class="popup__form-field popup__form-field_job" type="text" placeholder="Ваш род занятий"
                     value="" name="Profile-description" required>
                 <button class="popup__form-button popup__form-button_edit" type="submit"
@@ -72,6 +72,15 @@
             <button class="popup__close-button popup__close-button_img" type="button" aria-label="Закрыть"></button>
             <img class="popup__image" src="#" alt="#">
             <p class="popup__image-alt"></p>
+
+        </div>
+    </div>
+
+    <div class="popup popup_confirm">
+        <div class="popup__container">
+            <button class="popup__close-button popup__close-button_confirm" type="button" aria-label="Закрыть"></button>
+            <h3 class="popup__title popup__title_confirm">Вы уверены?</h3>
+            <button class="popup__confirm-button" type="button" aria-label="Подтвердить">Да</button>
         </div>
     </div>
 
@@ -88,7 +97,7 @@
         </div>
     </template>
 
-    <script src="script/index.js"></script>
+    <script type="module" src="script/index.js"></script>
 </body>
 
 </html>

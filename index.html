@@ -15,9 +15,15 @@
     </header>
 
     <main>
+
         <section class="profile">
             <div class="profile__information">
-                <img class="profile__avatar" src="images/Avatar.png" alt="Аватар">
+
+                <div class="profile__avatar-wrapper">
+                    <img class="profile__avatar" src="images/Avatar.png" alt="Аватар">
+                    <div class="profile__avatar-cover"></div>
+                </div>
+
                 <div class="profile__text">
                     <div class="profile__heading">
                         <h1 class="profile__name">Жак-Ив&nbsp;Кусто</h1>
@@ -25,9 +31,11 @@
                     </div>
                     <P class="profile__description">Исследователь океана</p>
                 </div>
+
             </div>
             <button class="profile__add-button" type="button" aria-label="Добавить"></button>
         </section>
+
         <section class="elements">
 
         </section>
@@ -37,13 +45,14 @@
         <p class="footer__copyright">&copy; 2020 Mesto Russia</p>
     </footer>
 
+<!--РЕДАКТИРОВАНИЕ ПРОФИЛЯ-->
     <div class="popup popup_edit">
         <div class="popup__container">
             <button class="popup__close-button popup__close-button_edit" type="button" aria-label="Закрыть"></button>
             <h3 class="popup__title">Редактировать профиль</h3>
             <form class="popup__form popup__form_edit" name="Profile-edit">
-                <input class="popup__form-field popup__form-field_name" type="text" placeholder="Введите имя"
-                    value="" name="Profile-name" required>
+                <input class="popup__form-field popup__form-field_name" type="text" placeholder="Введите имя" value=""
+                    name="Profile-name" required>
                 <input class="popup__form-field popup__form-field_job" type="text" placeholder="Ваш род занятий"
                     value="" name="Profile-description" required>
                 <button class="popup__form-button popup__form-button_edit" type="submit"
@@ -52,6 +61,7 @@
         </div>
     </div>
 
+<!--ДОБАВЛЕНИЕ МЕСТА-->
     <div class="popup popup_add">
         <div class="popup__container">
             <button class="popup__close-button popup__close-button_add" type="button" aria-label="Закрыть"></button>
@@ -67,11 +77,34 @@
         </div>
     </div>
 
+<!--РЕДАКТИРОВАНИЕ АВАТАРА-->
+    <div class="popup popup_avatar-edit">
+        <div class="popup__container">
+            <button class="popup__close-button popup__close-button_avatar-edit" type="button" aria-label="Закрыть"></button>
+            <h3 class="popup__title">Обновить аватар</h3>
+            <form class="popup__form popup__form_avatar-edit" name="avatar-edit">
+                <input class="popup__form-field popup__form-field_avatar-edit" type="url" placeholder="Ссылка на картинку" name="avatar-edit" required>
+                <button class="popup__form-button popup__form-button_avatar-edit" type="submit" name="Submit-button">Сохранить</button>
+            </form>
+        </div>
+    </div>
+
+<!--ОТКРЫТИЕ КАРТИНОК-->
     <div class="popup popup_img">
         <div class="popup__container popup__container_clear">
             <button class="popup__close-button popup__close-button_img" type="button" aria-label="Закрыть"></button>
             <img class="popup__image" src="#" alt="#">
             <p class="popup__image-alt"></p>
+
+        </div>
+    </div>
+
+<!--ПОДТВЕРЖДЕНИЕ УДАЛЕНИЯ-->
+    <div class="popup popup_confirm">
+        <div class="popup__container">
+            <button class="popup__close-button popup__close-button_confirm" type="button" aria-label="Закрыть"></button>
+            <h3 class="popup__title popup__title_confirm">Вы уверены?</h3>
+            <button class="popup__confirm-button" type="button" aria-label="Подтвердить">Да</button>
         </div>
     </div>
 
@@ -88,7 +121,7 @@
         </div>
     </template>
 
-    <script src="script/index.js"></script>
+    <script type="module" src="script/index.js"></script>
 </body>
 
 </html>

@@ -1,0 +1,6 @@
+.profile__avatar-wrapper {
+    max-width: 120px;
+    max-height: 120px;
+    position: relative;
+    padding-right: 30px;
+}

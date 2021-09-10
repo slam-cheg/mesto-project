@@ -38,7 +38,7 @@ const cardTemplate = document.querySelector('#card-template').content; // нах
 
 // попап редактирования аватара
 const avatarOld = document.querySelector('.profile__avatar'); // аватар который изначально в документе
-const avatarCover = document.querySelector('.profile__image-cover');
+const avatarCover = document.querySelector('.profile__avatar-cover');
 const popupAvatar = document.querySelector('.popup_avatar-edit'); // нашел попап редактирования аватара
 const formAvatar = popupAvatar.querySelector('.popup__form_avatar-edit'); // нашел форму редактирования аватара
 const avatarInput = formAvatar.querySelector('.popup__form-field_avatar-edit'); // нашел поле в форме отвечающее за ссылку на новый аватар

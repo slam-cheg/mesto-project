@@ -1,4 +1,4 @@
-.profile__image-cover {
+.profile__avatar-cover {
     height: 126px;
     width: 126px;
     background-color: rgba(0,0,0,0.8);
@@ -13,7 +13,7 @@
     transition: .3s;
 }
 
-.profile__image-cover:hover {
+.profile__avatar-cover:hover {
     opacity: 1;
     transition: .3s;
 }

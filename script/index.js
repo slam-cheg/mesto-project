@@ -1,5 +1,4 @@
 // ОБЪЯВЛЕНИЕ ВСЕХ ПЕРЕМЕННЫХ
-
 const closeButtons = document.querySelectorAll('.popup__close-button');
 
 // попап редактирования профиля
@@ -94,12 +93,24 @@ function closePopup(currentPopup) { // функция закрытия попа�
 // ЛАЙКИ
 
 function addLike(event) { // создаю функцию события в документе
-    event.target.classList.toggle('element__like_active');  // у "цели" события переключается класс
+
+    const likeHeart = event.target;
+    const likesContainer = likeHeart.closest('.element__likes');
+    const likeCount = likesContainer.querySelector('.element__like-count');
+    let count = likeCount.textContent;
+
+    if (!likeHeart.classList.contains('element__like_active')) {
+        likeCount.textContent = +1;
+    } else {
+        likeCount.textContent = count - 1;
+    }
+
+    likeHeart.classList.toggle('element__like_active');  // у "цели" события переключается класс
 }
 
 // РЕНДЕР ГОТОВЫХ КАРТОЧЕК
 
-import {addedCards} from './array.js'; // Массив с карточками вынесен в отдельный Модуль
+import { addedCards } from './array.js'; // Массив с карточками вынесен в отдельный Модуль
 
 addedCards.reverse().forEach(item => { // перебор массива в обратном порядке, чтобы карточки создавались в том порядке в котором записаны в массив
     const cardTitle = item.name; // приравниваю поле имени в массиве к названию карточки и alt изображения
@@ -120,7 +131,6 @@ function createCard(сardTitle, cardImage) { // функция создания 
     //для каждой добавляемой карточки добавляю слушетелей событий
     cardElement.querySelector('.element__image').addEventListener('click', () => openPopup(popupGallery)); // запускает открытие попапа с большим изображением по клику на картинку
     cardElement.querySelector('.element__image').addEventListener('click', renderingImage); // запускает функцию приравнивания картинки в карточке к картинке в попапе с большим изображением
-    cardElement.querySelector('.element__like').addEventListener('click', addLike); // ставит и убирает лайки
     cardElement.querySelector('.element__delete').addEventListener('click', confirming); // удаляет карточку из html разметки
 
     return cardElement;
@@ -186,3 +196,10 @@ function deleting() {
     deletingItem.remove(); // удаляю карточку
     closePopup(popupConfirm);
 }
+
+// лайки
+const likeHeart = document.querySelectorAll('.element__like');
+
+likeHeart.forEach((item) => {
+    item.addEventListener('click', addLike);
+})

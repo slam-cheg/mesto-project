@@ -4,3 +4,9 @@
     position: relative;
     padding-right: 30px;
 }
+
+@media screen and (max-width: 720px) {
+    .profile__avatar-wrapper {
+        padding-right: 0;
+    }
+}

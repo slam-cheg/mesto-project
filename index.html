@@ -45,7 +45,7 @@
         <p class="footer__copyright">&copy; 2020 Mesto Russia</p>
     </footer>
 
-<!--РЕДАКТИРОВАНИЕ ПРОФИЛЯ-->
+    <!--РЕДАКТИРОВАНИЕ ПРОФИЛЯ-->
     <div class="popup popup_edit">
         <div class="popup__container">
             <button class="popup__close-button popup__close-button_edit" type="button" aria-label="Закрыть"></button>
@@ -61,7 +61,7 @@
         </div>
     </div>
 
-<!--ДОБАВЛЕНИЕ МЕСТА-->
+    <!--ДОБАВЛЕНИЕ МЕСТА-->
     <div class="popup popup_add">
         <div class="popup__container">
             <button class="popup__close-button popup__close-button_add" type="button" aria-label="Закрыть"></button>
@@ -77,19 +77,22 @@
         </div>
     </div>
 
-<!--РЕДАКТИРОВАНИЕ АВАТАРА-->
+    <!--РЕДАКТИРОВАНИЕ АВАТАРА-->
     <div class="popup popup_avatar-edit">
         <div class="popup__container">
-            <button class="popup__close-button popup__close-button_avatar-edit" type="button" aria-label="Закрыть"></button>
+            <button class="popup__close-button popup__close-button_avatar-edit" type="button"
+                aria-label="Закрыть"></button>
             <h3 class="popup__title">Обновить аватар</h3>
             <form class="popup__form popup__form_avatar-edit" name="avatar-edit">
-                <input class="popup__form-field popup__form-field_avatar-edit" type="url" placeholder="Ссылка на картинку" name="avatar-edit" required>
-                <button class="popup__form-button popup__form-button_avatar-edit" type="submit" name="Submit-button">Сохранить</button>
+                <input class="popup__form-field popup__form-field_avatar-edit" type="url"
+                    placeholder="Ссылка на картинку" name="avatar-edit" required>
+                <button class="popup__form-button popup__form-button_avatar-edit" type="submit"
+                    name="Submit-button">Сохранить</button>
             </form>
         </div>
     </div>
 
-<!--ОТКРЫТИЕ КАРТИНОК-->
+    <!--ОТКРЫТИЕ КАРТИНОК-->
     <div class="popup popup_img">
         <div class="popup__container popup__container_clear">
             <button class="popup__close-button popup__close-button_img" type="button" aria-label="Закрыть"></button>
@@ -99,7 +102,7 @@
         </div>
     </div>
 
-<!--ПОДТВЕРЖДЕНИЕ УДАЛЕНИЯ-->
+    <!--ПОДТВЕРЖДЕНИЕ УДАЛЕНИЯ-->
     <div class="popup popup_confirm">
         <div class="popup__container">
             <button class="popup__close-button popup__close-button_confirm" type="button" aria-label="Закрыть"></button>
@@ -115,7 +118,10 @@
             <div class="element__information-bg">
                 <div class="element__information">
                     <h2 class="element__title"></h2>
-                    <button class="element__like" type="button" aria-label="Лайк" id="like"></button>
+                    <div class="element__likes">
+                        <button class="element__like" type="button" aria-label="Лайк" id="like"></button>
+                        <p class="element__like-count">0</p>
+                    </div>
                 </div>
             </div>
         </div>

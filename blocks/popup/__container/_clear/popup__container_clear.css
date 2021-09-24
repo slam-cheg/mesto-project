@@ -1,4 +1,6 @@
 .popup__container_clear {
+    z-index: 999;
+    position: relative;
     background-color: unset;
     max-width: 75vw;
     max-height: 75vh;

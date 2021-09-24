@@ -18,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/slam-cheg/mesto-project/issues"
   },
-  "homepage": "https://github.com/slam-cheg/mesto-project#readme"
+  "homepage": "https://github.com/slam-cheg/mesto-project#readme",
+  "devDependencies": {
+    "webpack": "^5.53.0"
+  }
 }

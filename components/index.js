@@ -2,8 +2,9 @@
 import addedCards from "./array.js"; // Массив с карточками вынесен в отдельный Модуль
 import validate from "./validate.js";
 
+validate();
+
 // ОБЪЯВЛЕНИЕ ВСЕХ ПЕРЕМЕННЫХ
-const closeButtons = document.querySelectorAll(".popup__close-button");
 
 // попап редактирования профиля
 const popupEdit = document.querySelector(".popup_edit"); // нашел в документе попап редактирования профиля
@@ -12,16 +13,16 @@ const closeButtonEdit = document.querySelector(".popup__close-button_edit"); // 
 const formEdit = document.querySelector(".popup__form_edit"); // Нахожу форму редактирования профиля
 const profileNameSaved = document.querySelector(".profile__name"); // нахожу имя профиля записаное по дефолту в разметке html
 const profileDescriptionSaved = document.querySelector(".profile__description"); // нахожу описание профиля записаное по дефолту в разметке html
-const profileNameOld = formEdit.querySelector(".popup__form-field_name"); // нашел поле имени в форме редактирования и прировнял его value к тексту имени в html разметке
-const profileDescriptionOld = formEdit.querySelector(".popup__form-field_job"); // нашел поле описания в форме редактирования и прировнял его value к тексту описания в html разметке
+const profileNameOld = formEdit.querySelector(".popup__form-input_name"); // нашел поле имени в форме редактирования и прировнял его value к тексту имени в html разметке
+const profileDescriptionOld = formEdit.querySelector(".popup__form-input_job"); // нашел поле описания в форме редактирования и прировнял его value к тексту описания в html разметке
 
 // попап добавления карточек
 const popupAdd = document.querySelector(".popup_add"); // нашел в документе попап добавления карточки
 const addButton = document.querySelector(".profile__add-button"); // нашел в документе кнопку которая открывает попап добавления карточки
 const closeButtonAdd = document.querySelector(".popup__close-button_add"); // нашел в документе кнопку которая закрывает попап добавления карточки
 const formAdd = document.querySelector(".popup__form_add"); // Нахожу форму добавления карточки
-const title = formAdd.querySelector(".popup__form-field_title"); // Нахожу в форме поле названия карточки
-const image = formAdd.querySelector(".popup__form-field_image"); // Нахожу в форме поле ссылки на картинку
+const title = formAdd.querySelector(".popup__form-input_title"); // Нахожу в форме поле названия карточки
+const image = formAdd.querySelector(".popup__form-input_image"); // Нахожу в форме поле ссылки на картинку
 
 // попап открытия больших изображений
 const popupGallery = document.querySelector(".popup_img"); // нашел в документе попап открытия большого изображения
@@ -44,7 +45,7 @@ const avatarOld = document.querySelector(".profile__avatar"); // аватар к
 const avatarCover = document.querySelector(".profile__avatar-cover");
 const popupAvatar = document.querySelector(".popup_avatar-edit"); // нашел попап редактирования аватара
 const formAvatar = popupAvatar.querySelector(".popup__form_avatar-edit"); // нашел форму редактирования аватара
-const avatarInput = formAvatar.querySelector(".popup__form-field_avatar-edit"); // нашел поле в форме отвечающее за ссылку на новый аватар
+const avatarInput = formAvatar.querySelector(".popup__form-input_avatar-edit"); // нашел поле в форме отвечающее за ссылку на новый аватар
 const closeButtonAvatar = popupAvatar.querySelector(".popup__close-button_avatar-edit");
 
 // ВСЕ СЛУШАТЕЛИ СОБЫТИЙ
@@ -81,10 +82,10 @@ function reWrite() {
 }
 
 // ФУНКЦИИ ОТКРЫТИЯ И ЗАКРЫТИЯ POP-UP'ов
-function openPopup(currentPopup) {
-    // функция открытия попапов
+function openPopup(currentPopup) { // функция открытия попапов
+
     currentPopup.classList.add("popup_opened"); // добавление класса у текущего попап
-    
+
     window.addEventListener("keydown", (event) => {
         // отслеживаем событие нажатия кнопки Escape в глобальной видимости
         if (event.key === "Escape") {
@@ -92,8 +93,8 @@ function openPopup(currentPopup) {
             closePopup(currentPopup);
         }
     });
-    currentPopup.addEventListener('click', (event)=>{
-        if(event.target === currentPopup){
+    currentPopup.addEventListener("click", (event) => {
+        if (event.target === currentPopup) {
             closePopup(currentPopup);
         }
     });
@@ -106,11 +107,12 @@ function closePopup(currentPopup) {
             closePopup(currentPopup);
         }
     });
-    currentPopup.removeEventListener('click', (event)=>{
-        if(event.target === currentPopup){
+    currentPopup.removeEventListener("click", (event) => {
+        if (event.target === currentPopup) {
             closePopup(currentPopup);
         }
     });
+
 }
 
 // ЛАЙКИ
@@ -186,13 +188,9 @@ function handlerAddFormSubmit(event) {
 
 // РЕДАКТИРОВАНИЕ ПРОФИЛЯ // ОТПРАВКА ФОРМЫ
 
-function handlerEditFormSubmit(event) {
-    // Обработчик «отправки» формы
-    event.preventDefault(); // Эта строчка отменяет стандартную отправку формы.
-
+function handlerEditFormSubmit() {
     profileNameSaved.textContent = profileNameOld.value; // контент дефолтного поля Имя теперь равняется value Имени в форме
     profileDescriptionSaved.textContent = profileDescriptionOld.value; // контент дефолтного поля описания теперь равняется value описания в форме
-
     closePopup(popupEdit); // функция сохранения информации отработала и при этом попап закрылся, очистки формы не происходит, т.к. в данном случае нет
 }
 

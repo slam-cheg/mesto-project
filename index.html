@@ -45,9 +45,19 @@
                 <button class="popup__close-button popup__close-button_edit" type="button" aria-label="Закрыть"></button>
                 <h3 class="popup__title">Редактировать профиль</h3>
                 <form class="popup__form popup__form_edit" name="Profile-edit" novalidate>
-                    <input class="popup__form-field popup__form-field_name" type="text" placeholder="Введите имя" value="" name="Profile-name" required  minlength="2" maxlength="40" />
-                    <input class="popup__form-field popup__form-field_job" type="text" placeholder="Ваш род занятий" value="" name="Profile-description" required min="2" maxlength="200" />
-                    <button class="popup__form-button popup__form-button_edit popup__form-button_disabled" type="submit" name="Submit-button">Сохранить</button>
+                    <fieldset class="popup__form-field-set">
+                        <label class="popup__form-field">
+                            <input class="popup__form-input popup__form-input_name" type="text" placeholder="Введите имя"value="" name="Profile-name" required minlength="2" maxlength="40" id="name-input" />
+                            <span class="popup__form-input_error name-input-error"></span>
+                        </label>
+
+                        <label class="popup__form-field">
+                            <input class="popup__form-input popup__form-input_job" type="text" placeholder="Ваш род занятий" value="" name="Profile-description" required min="2" maxlength="200" id="description-input" />
+                            <span class="popup__form-input_error description-input-error"></span>
+                        </label>
+
+                        <button class="popup__form-button popup__form-button_edit" type="submit" name="Submit-button">Сохранить</button>
+                    </fieldset>
                 </form>
             </div>
         </div>
@@ -58,9 +68,17 @@
                 <button class="popup__close-button popup__close-button_add" type="button" aria-label="Закрыть"></button>
                 <h3 class="popup__title">Новое Место</h3>
                 <form class="popup__form popup__form_add" name="card-add" novalidate>
-                    <input class="popup__form-field popup__form-field_title" type="text" placeholder="Название" name="card-title" required minlength="2" maxlength="30" />
-                    <input class="popup__form-field popup__form-field_image" type="url" placeholder="Ссылка на картинку" name="card-image" required />
-                    <button class="popup__form-button popup__form-button_add popup__form-button_disabled" type="submit" name="Submit-button">Сохранить</button>
+                    <fieldset class="popup__form-field-set">
+                        <label class="popup__form-field">
+                            <input class="popup__form-input popup__form-input_title" type="text" placeholder="Название" name="card-title" required minlength="2" maxlength="30" id="title-input" />
+                            <span class="popup__form-input_error title-input-error"></span>
+                        </label>
+                        <label class="popup__form-field">
+                            <input class="popup__form-input popup__form-input_image" type="url" placeholder="Ссылка на картинку" name="card-image" required id="card-description-input"/>
+                            <span class="popup__form-input_error card-description-input-error"></span>
+                        </label>
+                        <button class="popup__form-button popup__form-button_add" type="submit" name="Submit-button">Сохранить</button>
+                    </fieldset>
                 </form>
             </div>
         </div>
@@ -71,8 +89,13 @@
                 <button class="popup__close-button popup__close-button_avatar-edit" type="button" aria-label="Закрыть"></button>
                 <h3 class="popup__title">Обновить аватар</h3>
                 <form class="popup__form popup__form_avatar-edit" name="avatar-edit" novalidate>
-                    <input class="popup__form-field popup__form-field_avatar-edit" type="url" placeholder="Ссылка на картинку" name="avatar-edit" required />
-                    <button class="popup__form-button popup__form-button_avatar-edit popup__form-button_disabled" type="submit" name="Submit-button">Сохранить</button>
+                    <fieldset class="popup__form-field-set">
+                        <label class="popup__form-field">
+                            <input class="popup__form-input popup__form-input_avatar-edit" type="url" placeholder="Ссылка на картинку" name="avatar-edit" required id="avatar-input"/>
+                            <span class="popup__form-input_error avatar-input-error"></span>
+                        </label>
+                        <button class="popup__form-button popup__form-button_avatar-edit" type="submit" name="Submit-button">Сохранить</button>
+                    </fieldset>
                 </form>
             </div>
         </div>

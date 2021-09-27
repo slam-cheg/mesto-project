@@ -1,0 +1,30 @@
+.popup__form-input {
+    border: none;
+    border-bottom: 1px solid rgb(0 0 0 / 20%);
+    margin-bottom: 0;
+    font-size: 14px;
+    line-height: 17px;
+    color: #000;
+    padding-left: 0;
+    padding-bottom: 13px;
+    width: 100%;
+}
+
+.popup__form-input::-webkit-input-placeholder {
+    color: #000;
+}
+
+.popup__form-input::-moz-placeholder {
+    color: #000;
+}
+
+.popup__form-input:focus-visible {
+    outline: none;
+}
+
+@media screen and (max-width:720px) {
+    .popup__form-input {
+        font-size: 14px;
+        line-height: 17px;
+    } 
+}

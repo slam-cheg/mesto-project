@@ -2,6 +2,8 @@
 import addedCards from "./array.js"; // Массив с карточками вынесен в отдельный Модуль
 import validate from "./validate.js";
 
+validate()
+
 // ОБЪЯВЛЕНИЕ ВСЕХ ПЕРЕМЕННЫХ
 const closeButtons = document.querySelectorAll(".popup__close-button");
 
@@ -12,16 +14,16 @@ const closeButtonEdit = document.querySelector(".popup__close-button_edit"); // 
 const formEdit = document.querySelector(".popup__form_edit"); // Нахожу форму редактирования профиля
 const profileNameSaved = document.querySelector(".profile__name"); // нахожу имя профиля записаное по дефолту в разметке html
 const profileDescriptionSaved = document.querySelector(".profile__description"); // нахожу описание профиля записаное по дефолту в разметке html
-const profileNameOld = formEdit.querySelector(".popup__form-field_name"); // нашел поле имени в форме редактирования и прировнял его value к тексту имени в html разметке
-const profileDescriptionOld = formEdit.querySelector(".popup__form-field_job"); // нашел поле описания в форме редактирования и прировнял его value к тексту описания в html разметке
+const profileNameOld = formEdit.querySelector(".popup__form-input_name"); // нашел поле имени в форме редактирования и прировнял его value к тексту имени в html разметке
+const profileDescriptionOld = formEdit.querySelector(".popup__form-input_job"); // нашел поле описания в форме редактирования и прировнял его value к тексту описания в html разметке
 
 // попап добавления карточек
 const popupAdd = document.querySelector(".popup_add"); // нашел в документе попап добавления карточки
 const addButton = document.querySelector(".profile__add-button"); // нашел в документе кнопку которая открывает попап добавления карточки
 const closeButtonAdd = document.querySelector(".popup__close-button_add"); // нашел в документе кнопку которая закрывает попап добавления карточки
 const formAdd = document.querySelector(".popup__form_add"); // Нахожу форму добавления карточки
-const title = formAdd.querySelector(".popup__form-field_title"); // Нахожу в форме поле названия карточки
-const image = formAdd.querySelector(".popup__form-field_image"); // Нахожу в форме поле ссылки на картинку
+const title = formAdd.querySelector(".popup__form-input_title"); // Нахожу в форме поле названия карточки
+const image = formAdd.querySelector(".popup__form-input_image"); // Нахожу в форме поле ссылки на картинку
 
 // попап открытия больших изображений
 const popupGallery = document.querySelector(".popup_img"); // нашел в документе попап открытия большого изображения
@@ -44,7 +46,7 @@ const avatarOld = document.querySelector(".profile__avatar"); // аватар к
 const avatarCover = document.querySelector(".profile__avatar-cover");
 const popupAvatar = document.querySelector(".popup_avatar-edit"); // нашел попап редактирования аватара
 const formAvatar = popupAvatar.querySelector(".popup__form_avatar-edit"); // нашел форму редактирования аватара
-const avatarInput = formAvatar.querySelector(".popup__form-field_avatar-edit"); // нашел поле в форме отвечающее за ссылку на новый аватар
+const avatarInput = formAvatar.querySelector(".popup__form-input_avatar-edit"); // нашел поле в форме отвечающее за ссылку на новый аватар
 const closeButtonAvatar = popupAvatar.querySelector(".popup__close-button_avatar-edit");
 
 // ВСЕ СЛУШАТЕЛИ СОБЫТИЙ

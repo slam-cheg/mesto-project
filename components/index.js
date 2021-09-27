@@ -2,10 +2,9 @@
 import addedCards from "./array.js"; // Массив с карточками вынесен в отдельный Модуль
 import validate from "./validate.js";
 
-validate()
+validate();
 
 // ОБЪЯВЛЕНИЕ ВСЕХ ПЕРЕМЕННЫХ
-const closeButtons = document.querySelectorAll(".popup__close-button");
 
 // попап редактирования профиля
 const popupEdit = document.querySelector(".popup_edit"); // нашел в документе попап редактирования профиля
@@ -83,10 +82,10 @@ function reWrite() {
 }
 
 // ФУНКЦИИ ОТКРЫТИЯ И ЗАКРЫТИЯ POP-UP'ов
-function openPopup(currentPopup) {
-    // функция открытия попапов
+function openPopup(currentPopup) { // функция открытия попапов
+
     currentPopup.classList.add("popup_opened"); // добавление класса у текущего попап
-    
+
     window.addEventListener("keydown", (event) => {
         // отслеживаем событие нажатия кнопки Escape в глобальной видимости
         if (event.key === "Escape") {
@@ -94,8 +93,8 @@ function openPopup(currentPopup) {
             closePopup(currentPopup);
         }
     });
-    currentPopup.addEventListener('click', (event)=>{
-        if(event.target === currentPopup){
+    currentPopup.addEventListener("click", (event) => {
+        if (event.target === currentPopup) {
             closePopup(currentPopup);
         }
     });
@@ -108,11 +107,12 @@ function closePopup(currentPopup) {
             closePopup(currentPopup);
         }
     });
-    currentPopup.removeEventListener('click', (event)=>{
-        if(event.target === currentPopup){
+    currentPopup.removeEventListener("click", (event) => {
+        if (event.target === currentPopup) {
             closePopup(currentPopup);
         }
     });
+
 }
 
 // ЛАЙКИ
@@ -188,13 +188,9 @@ function handlerAddFormSubmit(event) {
 
 // РЕДАКТИРОВАНИЕ ПРОФИЛЯ // ОТПРАВКА ФОРМЫ
 
-function handlerEditFormSubmit(event) {
-    // Обработчик «отправки» формы
-    event.preventDefault(); // Эта строчка отменяет стандартную отправку формы.
-
+function handlerEditFormSubmit() {
     profileNameSaved.textContent = profileNameOld.value; // контент дефолтного поля Имя теперь равняется value Имени в форме
     profileDescriptionSaved.textContent = profileDescriptionOld.value; // контент дефолтного поля описания теперь равняется value описания в форме
-
     closePopup(popupEdit); // функция сохранения информации отработала и при этом попап закрылся, очистки формы не происходит, т.к. в данном случае нет
 }
 

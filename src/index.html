@@ -4,20 +4,20 @@
         <meta charset="UTF-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" href="pages/index.css" />
+        
         <title>Место</title>
     </head>
 
     <body class="page">
         <header class="header">
-            <img class="header__logo" src="images/logo.svg" alt="Место" />
+            <img class="header__logo" src="<%=require('../images/logo.svg')%>" alt="Место" />
         </header>
 
         <main>
             <section class="profile">
                 <div class="profile__information">
                     <div class="profile__avatar-wrapper">
-                        <img class="profile__avatar" src="images/Avatar.png" alt="Аватар" />
+                        <img class="profile__avatar" src="<%=require('../images/Avatar.png')%>" alt="Аватар" />
                         <div class="profile__avatar-cover"></div>
                     </div>
 
@@ -47,12 +47,32 @@
                 <form class="popup__form popup__form_edit" name="Profile-edit" novalidate>
                     <fieldset class="popup__form-field-set">
                         <label class="popup__form-field">
-                            <input class="popup__form-input popup__form-input_name" type="text" placeholder="Введите имя"value="" name="Profile-name" required minlength="2" maxlength="40" id="name-input" />
+                            <input
+                                class="popup__form-input popup__form-input_name"
+                                type="text"
+                                placeholder="Введите имя"
+                                value=""
+                                name="Profile-name"
+                                required
+                                minlength="2"
+                                maxlength="40"
+                                id="name-input"
+                            />
                             <span class="popup__form-input_error name-input-error"></span>
                         </label>
 
                         <label class="popup__form-field">
-                            <input class="popup__form-input popup__form-input_job" type="text" placeholder="Ваш род занятий" value="" name="Profile-description" required min="2" maxlength="200" id="description-input" />
+                            <input
+                                class="popup__form-input popup__form-input_job"
+                                type="text"
+                                placeholder="Ваш род занятий"
+                                value=""
+                                name="Profile-description"
+                                required
+                                min="2"
+                                maxlength="200"
+                                id="description-input"
+                            />
                             <span class="popup__form-input_error description-input-error"></span>
                         </label>
 
@@ -74,7 +94,7 @@
                             <span class="popup__form-input_error title-input-error"></span>
                         </label>
                         <label class="popup__form-field">
-                            <input class="popup__form-input popup__form-input_image" type="url" placeholder="Ссылка на картинку" name="card-image" required id="card-description-input"/>
+                            <input class="popup__form-input popup__form-input_image" type="url" placeholder="Ссылка на картинку" name="card-image" required id="card-description-input" />
                             <span class="popup__form-input_error card-description-input-error"></span>
                         </label>
                         <button class="popup__form-button popup__form-button_add" type="submit" name="Submit-button">Сохранить</button>
@@ -91,7 +111,7 @@
                 <form class="popup__form popup__form_avatar-edit" name="avatar-edit" novalidate>
                     <fieldset class="popup__form-field-set">
                         <label class="popup__form-field">
-                            <input class="popup__form-input popup__form-input_avatar-edit" type="url" placeholder="Ссылка на картинку" name="avatar-edit" required id="avatar-input"/>
+                            <input class="popup__form-input popup__form-input_avatar-edit" type="url" placeholder="Ссылка на картинку" name="avatar-edit" required id="avatar-input" />
                             <span class="popup__form-input_error avatar-input-error"></span>
                         </label>
                         <button class="popup__form-button popup__form-button_avatar-edit" type="submit" name="Submit-button">Сохранить</button>
@@ -133,7 +153,6 @@
                 </div>
             </div>
         </template>
-
-        <script type="module" src="components/index.js"></script>
+        <script type="module" src="index.html"></script>
     </body>
 </html>

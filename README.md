@@ -16,11 +16,7 @@
 Адаптация под мобильные устройства была сделана с учетом точек 1280px, 320px.
 
 ## Технологии примененные в работе:
-![html](https://user-images.githubusercontent.com/83250260/128259124-e415e17f-43b8-47e2-bafb-c83fe8e5f560.png)
-![css](https://user-images.githubusercontent.com/83250260/128259123-b7e7f1dc-c266-410b-99d9-de6d69d78b24.png)
-![js](https://user-images.githubusercontent.com/83250260/128259125-7f728f8d-2d15-425c-a1f8-918690d03aca.png)
-![WebPack](https://cdn.worldvectorlogo.com/logos/webpack-icon.svg)
-
+#### HTML, CSS, JavaScript, WebPack
 
 ### 🖖 А вот тут можно "пощупать" что получилось:
 

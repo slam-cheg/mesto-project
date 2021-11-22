@@ -2,28 +2,35 @@ const addedCards = [
     // Массив с данными для карточек "из коробки"
     {
         name: "Воркута",
-        link: "../../images/vorkuta.jpg",
+        link: VorkutaImage,
     },
     {
         name: "Киров",
-        link: "../../images/kirov.jpg",
+        link: KirovImage,
     },
     {
         name: "Вологда",
-        link: "../../images/vologda.jpg",
+        link: VologdaImage,
     },
     {
         name: "Москва",
-        link: "../../images/moskva.jpg",
+        link: MoskvaImage,
     },
     {
         name: "Батуми",
-        link: "../../images/batumi.jpg",
+        link: BatumiImage,
     },
     {
         name: "Карачаевск",
-        link: "../../images/karachaevsk.jpg",
+        link: KarachaevskImage,
     },
 ];
+
+import VorkutaImage from "../images/vorkuta.jpg";
+import KirovImage from "../images/kirov.jpg";
+import VologdaImage from "../images/vologda.jpg";
+import MoskvaImage from "../images/moskva.jpg";
+import BatumiImage from "../images/batumi.jpg";
+import KarachaevskImage from "../images/karachaevsk.jpg";
 
 export default addedCards;

@@ -1,5 +1,3 @@
-const validate = function() {
-
 const setEventListeners = (formElement) => {
     // создание функции которая принимает форму
     const inputList = Array.from(formElement.querySelectorAll(".popup__form-input")); // создаю массив из каждого инпута который есть в полученном филдсете
@@ -56,8 +54,6 @@ const enableValidation = () => {
     });
 };
 
-enableValidation();
-
 function hasInvalidInput(inputList) {
     // форма не валидна
     return inputList.some((inputElement) => {
@@ -76,6 +72,6 @@ function toggleButtonState(inputList, buttonElement) {
         buttonElement.classList.remove("popup__form-button_disabled"); // или переключается на активное если инпут валиден
         buttonElement.disabled = false;
     }
-}};
+}
 
-export default validate;
+export { setEventListeners, checkInputValidity, showInputError, hideInputError, enableValidation ,  hasInvalidInput,  toggleButtonState };

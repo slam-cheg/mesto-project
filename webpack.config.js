@@ -19,8 +19,6 @@ module.exports = {
     },
     module: {
         rules: [
-            // rules — это массив правил
-            // добавим в него объект правил для бабеля
             {
                 test: /\.js$/,
                 use: "babel-loader",

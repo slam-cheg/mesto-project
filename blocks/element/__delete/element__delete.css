@@ -10,7 +10,7 @@
     height: 19px;
     background-color: unset;
     border: none;
-    background-image: url(../../../images/bucket.svg);
+    background-image: url(../../../src/images/bucket.svg);
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;

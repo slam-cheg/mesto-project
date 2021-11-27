@@ -1,5 +1,5 @@
 // Импорты
-import "../pages/index.css";
+import "./pages/index.css";
 import addedCards from "./components/array.js"; // Массив с карточками
 import { setEventListeners, checkInputValidity, showInputError, hideInputError, enableValidation, hasInvalidInput, toggleButtonState } from "./components/validate.js"; // валидация форм
 import { openPopup, closePopup } from "./components/modal.js"; // открытие и закрытие попапов
@@ -64,6 +64,10 @@ avatarCover.addEventListener("click", () => openPopup(popupAvatar));
 closeButtonAvatar.addEventListener("click", () => closePopup(popupAvatar));
 formAvatar.addEventListener("submit", handlerAvatarFormSubmit);
 
+
+enableValidation();
+
+
 // ФУНКЦИЯ ЗАМЕНЫ АВАТАРА
 
 function handlerAvatarFormSubmit(event) {
@@ -109,7 +113,6 @@ addedCards.reverse().forEach((item) => {
     // перебор массива в обратном порядке, чтобы карточки создавались в том порядке в котором записаны в массив
     const cardTitle = item.name; // приравниваю поле имени в массиве к названию карточки и alt изображения
     const cardImage = item.link; // приравниваю ссылку на изображение к изображению в карточке
-    createCard(cardTitle, cardImage); // запускаю функцию создания карточки для каждого "прохода" по массиву, пока он не закончится
     addCard(cardTitle, cardImage);
 });
 
@@ -124,7 +127,6 @@ function createCard(сardTitle, cardImage) {
     cardElement.querySelector(".element__image").alt = сardTitle; // записываю параметр заголовка в alt изображения
 
     //для каждой добавляемой карточки добавляю слушетелей событий
-    cardElement.querySelector(".element__image").addEventListener("click", () => openPopup(popupGallery)); // запускает открытие попапа с большим изображением по клику на картинку
     cardElement.querySelector(".element__image").addEventListener("click", renderingImage); // запускает функцию приравнивания картинки в карточке к картинке в попапе с большим изображением
     cardElement.querySelector(".element__delete").addEventListener("click", confirming); // удаляет карточку из html разметки
 
@@ -164,12 +166,14 @@ function handlerEditFormSubmit() {
 // ОТКРЫТИЕ ПОПАП С ИЗОБРАЖЕНИЕМ
 
 function renderingImage(event) {
+
     // Функция события открывающаяся по клику на изображения в карточках
     const itemImage = event.target; // "цель" данного события записываю в переменную
     popupImage.src = itemImage.src; // приравниваю значения SRC у картинки в карточке и у открывшейся картинки.
     const itemAlt = event.target.alt; // значение alt тега у "цели" события записываю в переменную
     popupImageDescription.textContent = itemAlt; // значение подписи под фотографией теперь то же что и alt изображения который в свою очередь всегда равен названию карточки
     popupImage.alt = itemAlt; // значение alt у открывшейся картинки подставляется из значения alt той картинки на которую кликнули
+    openPopup(popupGallery);
 }
 
 // ПОДТВЕРЖДЕНИЕ УДАЛЕНИЯ

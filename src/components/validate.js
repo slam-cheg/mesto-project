@@ -74,4 +74,4 @@ function toggleButtonState(inputList, buttonElement) {
     }
 }
 
-export { setEventListeners, checkInputValidity, showInputError, hideInputError, enableValidation ,  hasInvalidInput,  toggleButtonState };
+export { setEventListeners, checkInputValidity, showInputError, hideInputError, enableValidation, hasInvalidInput, toggleButtonState };

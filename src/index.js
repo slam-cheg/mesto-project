@@ -64,8 +64,8 @@ avatarCover.addEventListener("click", () => openPopup(popupAvatar));
 closeButtonAvatar.addEventListener("click", () => closePopup(popupAvatar));
 formAvatar.addEventListener("submit", handlerAvatarFormSubmit);
 
+enableValidation(); 
 
-enableValidation();
 
 
 // ФУНКЦИЯ ЗАМЕНЫ АВАТАРА
@@ -77,6 +77,7 @@ function handlerAvatarFormSubmit(event) {
     avatarOld.src = newAvatar;
 
     closePopup(popupAvatar); // форма была отправлена, попап закрывается
+    enableValidation();
 }
 
 // ФУНКЦИЯ ПОДГРУЖАЕТ ЗНАЧЕНИЯ ИМЕНИ И ОПИСАНИЯ ПРОФИЛЯ В POP-UP
@@ -127,6 +128,7 @@ function createCard(сardTitle, cardImage) {
     cardElement.querySelector(".element__image").alt = сardTitle; // записываю параметр заголовка в alt изображения
 
     //для каждой добавляемой карточки добавляю слушетелей событий
+    cardElement.querySelector(".element__like").addEventListener("click", addLike)
     cardElement.querySelector(".element__image").addEventListener("click", renderingImage); // запускает функцию приравнивания картинки в карточке к картинке в попапе с большим изображением
     cardElement.querySelector(".element__delete").addEventListener("click", confirming); // удаляет карточку из html разметки
 
@@ -153,6 +155,7 @@ function handlerAddFormSubmit(event) {
     addCard(cardTitle, cardImage); // запускается функция создания карточки и добавления в DOM
     closePopup(popupAdd); // форма была отправлена, попап закрывается
     event.target.reset(); // поля формы очищаются после закрытия попап
+    enableValidation();
 }
 
 // РЕДАКТИРОВАНИЕ ПРОФИЛЯ // ОТПРАВКА ФОРМЫ
@@ -161,6 +164,7 @@ function handlerEditFormSubmit() {
     profileNameSaved.textContent = profileNameOld.value; // контент дефолтного поля Имя теперь равняется value Имени в форме
     profileDescriptionSaved.textContent = profileDescriptionOld.value; // контент дефолтного поля описания теперь равняется value описания в форме
     closePopup(popupEdit); // функция сохранения информации отработала и при этом попап закрылся, очистки формы не происходит, т.к. в данном случае нет
+    enableValidation();
 }
 
 // ОТКРЫТИЕ ПОПАП С ИЗОБРАЖЕНИЕМ
@@ -193,7 +197,7 @@ function deleting() {
 }
 
 // лайки (после добавления всех карточек в DOM)
-const likeHeart = document.querySelectorAll(".element__like"); // нахожу все иконки сердечек в документе
+ // нахожу все иконки сердечек в документе
 
 likeHeart.forEach((item) => {
     // для каждой иконки добавляю слушатель клика

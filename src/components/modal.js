@@ -2,33 +2,24 @@ function openPopup(currentPopup) {
     // функция открытия попапов
 
     currentPopup.classList.add("popup_opened"); // добавление класса у текущего попап
-
-    window.addEventListener("keydown", (event) => {
-        // отслеживаем событие нажатия кнопки Escape в глобальной видимости
-        if (event.key === "Escape") {
-            // при совершении события срабатывает функция закрытия popup
-            closePopup(currentPopup);
-        }
-    });
-    currentPopup.addEventListener("click", (event) => {
-        if (event.target === currentPopup) {
-            closePopup(currentPopup);
-        }
-    });
+    window.addEventListener("keydown", openCloseModal);
 }
 
 function closePopup(currentPopup) {
     currentPopup.classList.remove("popup_opened"); // переключение класса у текущего попап
-    window.removeEventListener("keydown", (event) => {
-        if (event.key === "Escape") {
-            closePopup(currentPopup);
-        }
-    });
-    currentPopup.removeEventListener("click", (event) => {
-        if (event.target === currentPopup) {
-            closePopup(currentPopup);
-        }
-    });
+    window.removeEventListener("keydown", openCloseModal);
 }
 
-export { openPopup, closePopup };
+function openCloseModal(event) {
+    const openedPopUp = document.querySelector(".popup_opened");
+    if (event.key === "Escape") {
+        closePopup(openedPopUp);
+    }
+    if (event.type === "click") {
+        if (event.target === event.currentTarget) {
+            closePopup(event.target);
+        }
+    }
+}
+
+export { openPopup, closePopup, openCloseModal };

@@ -1,11 +1,14 @@
 // Импорты
-import "./pages/index.css";
-import addedCards from "./components/array.js"; // Массив с карточками
-import { setEventListeners, checkInputValidity, showInputError, hideInputError, enableValidation, hasInvalidInput, toggleButtonState } from "./components/validate.js"; // валидация форм
-import { openPopup, closePopup } from "./components/modal.js"; // открытие и закрытие попапов
+import "./index.css";
 
+import addedCards from "../components/array.js"; // Массив с карточками
+import { setEventListeners, checkInputValidity, showInputError, hideInputError, enableValidation, hasInvalidInput, toggleButtonState } from "../components/validate.js"; // валидация форм
+import { openPopup, closePopup, openCloseModal } from "../components/modal.js"; // открытие и закрытие попапов
+import "../images/icon.ico";
 
 // ОБЪЯВЛЕНИЕ ВСЕХ ПЕРЕМЕННЫХ
+
+const modals = document.querySelectorAll(".popup");
 
 // попап редактирования профиля
 const popupEdit = document.querySelector(".popup_edit"); // нашел в документе попап редактирования профиля
@@ -63,10 +66,11 @@ closeButtonConfirm.addEventListener("click", () => closePopup(popupConfirm)); //
 avatarCover.addEventListener("click", () => openPopup(popupAvatar));
 closeButtonAvatar.addEventListener("click", () => closePopup(popupAvatar));
 formAvatar.addEventListener("submit", handlerAvatarFormSubmit);
+modals.forEach((popup) => {
+    popup.addEventListener("click", openCloseModal);
+});
 
-enableValidation(); 
-
-
+enableValidation();
 
 // ФУНКЦИЯ ЗАМЕНЫ АВАТАРА
 
@@ -128,7 +132,7 @@ function createCard(сardTitle, cardImage) {
     cardElement.querySelector(".element__image").alt = сardTitle; // записываю параметр заголовка в alt изображения
 
     //для каждой добавляемой карточки добавляю слушетелей событий
-    cardElement.querySelector(".element__like").addEventListener("click", addLike)
+    cardElement.querySelector(".element__like").addEventListener("click", addLike);
     cardElement.querySelector(".element__image").addEventListener("click", renderingImage); // запускает функцию приравнивания картинки в карточке к картинке в попапе с большим изображением
     cardElement.querySelector(".element__delete").addEventListener("click", confirming); // удаляет карточку из html разметки
 
@@ -170,7 +174,6 @@ function handlerEditFormSubmit() {
 // ОТКРЫТИЕ ПОПАП С ИЗОБРАЖЕНИЕМ
 
 function renderingImage(event) {
-
     // Функция события открывающаяся по клику на изображения в карточках
     const itemImage = event.target; // "цель" данного события записываю в переменную
     popupImage.src = itemImage.src; // приравниваю значения SRC у картинки в карточке и у открывшейся картинки.
@@ -195,11 +198,3 @@ function deleting() {
     deletingItem.remove(); // удаляю карточку
     closePopup(popupConfirm); // попап подтверждения отработал и закрывается
 }
-
-// лайки (после добавления всех карточек в DOM)
- // нахожу все иконки сердечек в документе
-
-likeHeart.forEach((item) => {
-    // для каждой иконки добавляю слушатель клика
-    item.addEventListener("click", addLike);
-});

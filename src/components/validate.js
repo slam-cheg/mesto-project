@@ -1,7 +1,6 @@
-const setEventListeners = (formElement) => {
+const setEventListeners = (formElement, inputList, buttonElement) => {
     // создание функции которая принимает форму
-    const inputList = Array.from(formElement.querySelectorAll(".popup__form-input")); // создаю массив из каждого инпута который есть в полученном филдсете
-    const buttonElement = formElement.querySelector(".popup__form-button"); //нашлась кнопка от данной формы
+
     toggleButtonState(inputList, buttonElement); // запуск функции смены состояния кнопки
     inputList.forEach((inputElement) => {
         // проход по каждому инпуту
@@ -47,10 +46,13 @@ const enableValidation = () => {
             evt.preventDefault(); // отмена стандартной отправки формы
         });
         const fieldsetList = Array.from(formElement.querySelectorAll(".popup__form-field-set")); // массив всех филдсетов
+        const inputList = Array.from(formElement.querySelectorAll(".popup__form-input")); // создаю массив из каждого инпута который есть в полученном филдсете
+        const buttonElement = formElement.querySelector(".popup__form-button"); //нашлась кнопка от данной формы
         fieldsetList.forEach((fieldSet) => {
             // для каждого филдсета
-            setEventListeners(fieldSet); // устанавливаются обработчики событий
+            setEventListeners(fieldSet, inputList, buttonElement); // устанавливаются обработчики событий
         });
+        
     });
 };
 

@@ -1,14 +1,14 @@
 const settings = {
-    pop: "popup__form-input_error_active",
+    popupError: "popup__form-input_error_active",
     popupButtonDisabled: "popup__form-button_disabled",
-    popupForm: ".popup__form",
     popupFieldSet: ".popup__form-field-set",
     popupButton: ".popup__form-button",
     popupInput: ".popup__form-input",
+    allForms: document.querySelectorAll(".popup__form"),
 };
 
 const enableValidation = () => {
-    const formList = Array.from(document.querySelectorAll(settings.popupForm));
+    const formList = Array.from(settings.allForms);
     formList.forEach((formElement) => {
         formElement.addEventListener("submit", function (evt) {
             evt.preventDefault();
@@ -45,15 +45,15 @@ const checkInputValidity = (formElement, inputElement) => {
 const showInputError = (formElement, inputElement, errorMessage) => {
     // функция показа сообшения об ошибке
     const errorElement = formElement.querySelector(`.${inputElement.id}-error`); // в данной форме ищу айди нужного инпута
-    inputElement.classList.add(settings.pop);
+    inputElement.classList.add(settings.popupError);
     errorElement.textContent = errorMessage; // значение поля об ошибке
-    errorElement.classList.add(settings.pop);
+    errorElement.classList.add(settings.popupError);
 };
 
 const hideInputError = (formElement, inputElement) => {
     const errorElement = formElement.querySelector(`.${inputElement.id}-error`); // сама ошибка
-    inputElement.classList.remove(settings.pop); // убирается класс когда ошибка уже не активна
-    errorElement.classList.remove(settings.pop);
+    inputElement.classList.remove(settings.popupError); // убирается класс когда ошибка уже не активна
+    errorElement.classList.remove(settings.popupError);
     errorElement.textContent = ""; // тексту ошибки присвается пустая строка
 };
 
@@ -66,7 +66,6 @@ function hasInvalidInput(inputList) {
 }
 
 function toggleButtonState(inputList, buttonElement) {
-    // функция переключения состояния кнопки
     if (hasInvalidInput(inputList)) {
         // если инпут не валиден то
         buttonElement.classList.add(settings.popupButtonDisabled); // состояние кнопки переключается на неактивное
@@ -77,4 +76,4 @@ function toggleButtonState(inputList, buttonElement) {
     }
 }
 
-export { setEventListeners, checkInputValidity, showInputError, hideInputError, enableValidation, hasInvalidInput, toggleButtonState };
+export { setEventListeners, checkInputValidity, showInputError, hideInputError, enableValidation, hasInvalidInput, toggleButtonState, settings };

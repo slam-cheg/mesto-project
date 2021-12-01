@@ -2,13 +2,15 @@
 import "./index.css";
 
 import addedCards from "../components/array.js"; // Массив с карточками
-import { setEventListeners, checkInputValidity, showInputError, hideInputError, enableValidation, hasInvalidInput, toggleButtonState } from "../components/validate.js"; // валидация форм
+import { setEventListeners, checkInputValidity, showInputError, hideInputError, enableValidation, hasInvalidInput, toggleButtonState, settings } from "../components/validate.js"; // валидация форм
 import { openPopup, closePopup, closeByEscape, handleOverlayClick } from "../components/modal.js"; // открытие и закрытие попапов
 import "../images/icon.ico";
 
 // ОБЪЯВЛЕНИЕ ВСЕХ ПЕРЕМЕННЫХ
 
 const modals = document.querySelectorAll(".popup");
+
+enableValidation(settings);
 
 // попап редактирования профиля
 const popupEdit = document.querySelector(".popup_edit"); // нашел в документе попап редактирования профиля
@@ -27,6 +29,7 @@ const closeButtonAdd = document.querySelector(".popup__close-button_add"); // н
 const formAdd = document.querySelector(".popup__form_add"); // Нахожу форму добавления карточки
 const title = formAdd.querySelector(".popup__form-input_title"); // Нахожу в форме поле названия карточки
 const image = formAdd.querySelector(".popup__form-input_image"); // Нахожу в форме поле ссылки на картинку
+const popupFormButton = formAdd.querySelector(".popup__form-button_add"); //
 
 // попап открытия больших изображений
 const popupGallery = document.querySelector(".popup_img"); // нашел в документе попап открытия большого изображения
@@ -69,8 +72,6 @@ formAvatar.addEventListener("submit", handlerAvatarFormSubmit);
 modals.forEach((popup) => {
     popup.addEventListener("click", handleOverlayClick);
 });
-
-enableValidation();
 
 // ФУНКЦИЯ ЗАМЕНЫ АВАТАРА
 
@@ -158,6 +159,8 @@ function handlerAddFormSubmit(event) {
     addCard(cardTitle, cardImage); // запускается функция создания карточки и добавления в DOM
     closePopup(popupAdd); // форма была отправлена, попап закрывается
     event.target.reset(); // поля формы очищаются после закрытия попап
+    popupFormButton.classList.add("popup__form-button_disabled");
+    popupFormButton.setAttribute("disabled");
 }
 
 // РЕДАКТИРОВАНИЕ ПРОФИЛЯ // ОТПРАВКА ФОРМЫ

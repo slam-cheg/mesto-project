@@ -160,7 +160,7 @@ function handlerAddFormSubmit(event) {
     closePopup(popupAdd); // форма была отправлена, попап закрывается
     event.target.reset(); // поля формы очищаются после закрытия попап
     popupFormButton.classList.add("popup__form-button_disabled");
-    popupFormButton.setAttribute("disabled");
+    popupFormButton.setAttribute("disabled", true);
 }
 
 // РЕДАКТИРОВАНИЕ ПРОФИЛЯ // ОТПРАВКА ФОРМЫ

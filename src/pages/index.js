@@ -3,7 +3,7 @@ import "./index.css";
 
 import addedCards from "../components/array.js"; // Массив с карточками
 import { setEventListeners, checkInputValidity, showInputError, hideInputError, enableValidation, hasInvalidInput, toggleButtonState } from "../components/validate.js"; // валидация форм
-import { openPopup, closePopup, openCloseModal } from "../components/modal.js"; // открытие и закрытие попапов
+import { openPopup, closePopup, closeByEscape, handleOverlayClick } from "../components/modal.js"; // открытие и закрытие попапов
 import "../images/icon.ico";
 
 // ОБЪЯВЛЕНИЕ ВСЕХ ПЕРЕМЕННЫХ
@@ -67,7 +67,7 @@ avatarCover.addEventListener("click", () => openPopup(popupAvatar));
 closeButtonAvatar.addEventListener("click", () => closePopup(popupAvatar));
 formAvatar.addEventListener("submit", handlerAvatarFormSubmit);
 modals.forEach((popup) => {
-    popup.addEventListener("click", openCloseModal);
+    popup.addEventListener("click", handleOverlayClick);
 });
 
 enableValidation();
@@ -81,7 +81,6 @@ function handlerAvatarFormSubmit(event) {
     avatarOld.src = newAvatar;
 
     closePopup(popupAvatar); // форма была отправлена, попап закрывается
-    enableValidation();
 }
 
 // ФУНКЦИЯ ПОДГРУЖАЕТ ЗНАЧЕНИЯ ИМЕНИ И ОПИСАНИЯ ПРОФИЛЯ В POP-UP
@@ -159,7 +158,6 @@ function handlerAddFormSubmit(event) {
     addCard(cardTitle, cardImage); // запускается функция создания карточки и добавления в DOM
     closePopup(popupAdd); // форма была отправлена, попап закрывается
     event.target.reset(); // поля формы очищаются после закрытия попап
-    enableValidation();
 }
 
 // РЕДАКТИРОВАНИЕ ПРОФИЛЯ // ОТПРАВКА ФОРМЫ
@@ -168,7 +166,6 @@ function handlerEditFormSubmit() {
     profileNameSaved.textContent = profileNameOld.value; // контент дефолтного поля Имя теперь равняется value Имени в форме
     profileDescriptionSaved.textContent = profileDescriptionOld.value; // контент дефолтного поля описания теперь равняется value описания в форме
     closePopup(popupEdit); // функция сохранения информации отработала и при этом попап закрылся, очистки формы не происходит, т.к. в данном случае нет
-    enableValidation();
 }
 
 // ОТКРЫТИЕ ПОПАП С ИЗОБРАЖЕНИЕМ

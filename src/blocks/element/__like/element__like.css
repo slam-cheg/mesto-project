@@ -3,7 +3,7 @@
     border: unset;
     height: 19px;
     width: 22px;
-    background-image: url('../../../src/images/like.svg');
+    background-image: url('../../../images/like.svg');
     background-repeat: no-repeat;
     background-size: contain;
     transition: .2s;

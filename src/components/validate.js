@@ -16,44 +16,46 @@ const enableValidation = (settings) => {
         const fieldsetList = Array.from(formElement.querySelectorAll(settings.popupFieldSet));
         const inputList = Array.from(formElement.querySelectorAll(settings.popupInput));
         const buttonElement = formElement.querySelector(settings.popupButton);
+        const settingsError = settings.popupError;
+        const disabledButton = settings.popupButtonDisabled;
         fieldsetList.forEach((fieldSet) => {
-            setEventListeners(fieldSet, inputList, buttonElement);
+            setEventListeners(fieldSet, inputList, buttonElement, settingsError, disabledButton);
         });
     });
 };
 
-const setEventListeners = (formElement, inputList, buttonElement) => {
-    toggleButtonState(inputList, buttonElement);
+const setEventListeners = (formElement, inputList, buttonElement, settingsError, disabledButton) => {
+    toggleButtonState(inputList, buttonElement, disabledButton);
     inputList.forEach((inputElement) => {
         inputElement.addEventListener("input", function () {
-            checkInputValidity(formElement, inputElement);
-            toggleButtonState(inputList, buttonElement);
+            checkInputValidity(formElement, inputElement, settingsError);
+            toggleButtonState(inputList, buttonElement, disabledButton);
         });
     });
 };
 
-const checkInputValidity = (formElement, inputElement) => {
+const checkInputValidity = (formElement, inputElement, settingsError) => {
     // проверка валидности поля
     if (!inputElement.validity.valid) {
         // если поле не валидно
-        showInputError(formElement, inputElement, inputElement.validationMessage); // показываем сообщение об ошибке
+        showInputError(formElement, inputElement, inputElement.validationMessage, settingsError); // показываем сообщение об ошибке
     } else {
-        hideInputError(formElement, inputElement); // если валидно то прячем сообщение об ошибке если оно было ранее активно
+        hideInputError(formElement, inputElement, settingsError); // если валидно то прячем сообщение об ошибке если оно было ранее активно
     }
 };
 
-const showInputError = (formElement, inputElement, errorMessage) => {
+const showInputError = (formElement, inputElement, errorMessage, settingsError) => {
     // функция показа сообшения об ошибке
     const errorElement = formElement.querySelector(`.${inputElement.id}-error`); // в данной форме ищу айди нужного инпута
-    inputElement.classList.add(settings.popupError);
+    inputElement.classList.add(settingsError);
     errorElement.textContent = errorMessage; // значение поля об ошибке
-    errorElement.classList.add(settings.popupError);
+    errorElement.classList.add(settingsError);
 };
 
-const hideInputError = (formElement, inputElement) => {
+const hideInputError = (formElement, inputElement, settingsError) => {
     const errorElement = formElement.querySelector(`.${inputElement.id}-error`); // сама ошибка
-    inputElement.classList.remove(settings.popupError); // убирается класс когда ошибка уже не активна
-    errorElement.classList.remove(settings.popupError);
+    inputElement.classList.remove(settingsError); // убирается класс когда ошибка уже не активна
+    errorElement.classList.remove(settingsError);
     errorElement.textContent = ""; // тексту ошибки присвается пустая строка
 };
 
@@ -65,13 +67,13 @@ function hasInvalidInput(inputList) {
     });
 }
 
-function toggleButtonState(inputList, buttonElement) {
+function toggleButtonState(inputList, buttonElement, disabledButton) {
     if (hasInvalidInput(inputList)) {
         // если инпут не валиден то
-        buttonElement.classList.add(settings.popupButtonDisabled); // состояние кнопки переключается на неактивное
+        buttonElement.classList.add(disabledButton); // состояние кнопки переключается на неактивное
         buttonElement.disabled = true;
     } else {
-        buttonElement.classList.remove(settings.popupButtonDisabled); // или переключается на активное если инпут валиден
+        buttonElement.classList.remove(disabledButton); // или переключается на активное если инпут валиден
         buttonElement.disabled = false;
     }
 }

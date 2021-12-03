@@ -4,11 +4,11 @@ const settings = {
     popupFieldSet: ".popup__form-field-set",
     popupButton: ".popup__form-button",
     popupInput: ".popup__form-input",
-    allForms: document.querySelectorAll(".popup__form"),
+    popupForm: ".popup__form"
 };
 
-const enableValidation = () => {
-    const formList = Array.from(settings.allForms);
+const enableValidation = (settings) => {
+    const formList = Array.from(document.querySelectorAll(settings.popupForm));
     formList.forEach((formElement) => {
         formElement.addEventListener("submit", function (evt) {
             evt.preventDefault();

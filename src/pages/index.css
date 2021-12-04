@@ -4,12 +4,10 @@
 @import url(../vendor/fonts/fonts.css);
 @import url(../blocks/page/page.css);
 
-
 /* HEADER */
 
 @import url(../blocks/header/header.css);
 @import url(../blocks/header/__logo/header__logo.css);
-
 
 /* PROFILE */
 
@@ -25,7 +23,6 @@
 @import url(../blocks/profile/__avatar-wrapper/profile__avatar-wrapper.css);
 @import url(../blocks/profile/__avatar-cover/profile__avatar-cover.css);
 
-
 /* ELEMENTS */
 
 @import url(../blocks/elements/elements.css);
@@ -36,15 +33,14 @@
 @import url(../blocks/element/__information/element__information.css);
 @import url(../blocks/element/__like/_active/element__like_active.css);
 @import url(../blocks/element/__delete/element__delete.css);
+@import url(../blocks/element/__delete/_deactive/element__delete_deactive.css);
 @import url(../blocks/element/__like-count/element__like-count.css);
 @import url(../blocks/element/__likes/element__likes.css);
-
 
 /* FOOTER */
 
 @import url(../blocks/footer/footer.css);
 @import url(../blocks/footer/__copyright/footer__copyright.css);
-
 
 /* POPUP */
 

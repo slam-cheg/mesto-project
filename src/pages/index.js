@@ -1,15 +1,15 @@
 // Импорты
 import "./index.css";
-import { getInitialCards, getUsers, getMyId, getMyProfile, sendMyProfile } from "../components/api.js";
+import { getInitialCards, getUsers, getMyId, getMyProfile, getMyAvatar, sendCards } from "../components/api.js";
 import { setEventListeners, checkInputValidity, showInputError, hideInputError, enableValidation, hasInvalidInput, toggleButtonState, settings } from "../components/validate.js"; // валидация форм
 import { openPopup, closePopup, closeByEscape, handleOverlayClick } from "../components/modal.js"; // открытие и закрытие попапов
 import "../images/icon.ico";
+import { global } from "core-js";
 
 //Запуск всех функций
 
 api();
 getCurrentUser();
-getUsers();
 updateProfile();
 enableValidation(settings);
 
@@ -88,11 +88,12 @@ function handlerAvatarFormSubmit(event) {
     avatarOld.src = newAvatar;
 
     closePopup(popupAvatar); // форма была отправлена, попап закрывается
+    getMyAvatar(newAvatar);
 }
 
 // Загрузка имени и описания профиля с сервера
 function updateProfile() {
-    getMyProfile()
+    getUsers()
         .then((res) => {
             if (res.ok) {
                 return res.json();
@@ -100,8 +101,16 @@ function updateProfile() {
             return Promise.reject(`Ошибка: ${res.status}`);
         })
         .then((res) => {
-            profileNameSaved.textContent = res.name;
-            profileDescriptionSaved.textContent = res.about;
+            res.forEach((user) => {
+                if (user._id === "6043356bdb4f546a17e4e66d") {
+                    profileNameSaved.textContent = user.name;
+                    profileDescriptionSaved.textContent = user.about;
+                    avatarOld.src = user.avatar;
+                }
+            });
+        })
+        .catch((err) => {
+            console.log(err);
         });
 }
 
@@ -142,6 +151,7 @@ function api() {
             return Promise.reject(`Ошибка: ${res.status}`);
         })
         .then((res) => {
+            console.log(res);
             render(res);
         })
         .catch((err) => {
@@ -156,7 +166,7 @@ function render(arr) {
         const initialLikes = item.likes;
         const userId = item._id;
         const cardOwner = item.owner;
-        addCard(cardTitle, cardImage, initialLikes, userId);
+        addCard(cardTitle, cardImage, initialLikes, userId, cardOwner);
     });
 }
 // СОЗДАНИЕ КАРТОЧЕК
@@ -170,20 +180,24 @@ function getCurrentUser() {
             return Promise.reject(`Ошибка: ${res.status}`);
         })
         .then((user) => {
-            currentUser = user;
+            console.log(user);
+            userId(user);
         })
         .catch((err) => {
             console.log(err);
         });
 }
 
-function createCard(сardTitle, cardImage, initialLikes, userId) {
-    // функция создания карточек с 2 параметрами
+function userId(user) {
+    currentUser = user;
+}
+
+function createCard(сardTitle, cardImage, initialLikes, userId, cardOwner) {
     const cardElement = cardTemplate.querySelector(".element").cloneNode(true);
     let likeCount = cardElement.querySelector(".element__like-count").textContent;
     const bucket = cardElement.querySelector(".element__delete");
 
-    cardElement.id = userId;
+    cardElement.owner = cardOwner;
     cardElement.querySelector(".element__title").textContent = сardTitle; // записываю параметр заголовка в соответствующий тег разметки html
     cardElement.querySelector(".element__image").src = cardImage; // записываю параметр изображения в соответствующий тег разметки html
     cardElement.querySelector(".element__image").alt = сardTitle; // записываю параметр заголовка в alt изображения
@@ -193,7 +207,7 @@ function createCard(сardTitle, cardImage, initialLikes, userId) {
     } else {
         likeCount = 0;
     }
-    if (userId !== currentUser) {
+    if (cardOwner !== currentUser) {
         bucket.classList.add("element__delete_deactive");
     }
 
@@ -207,10 +221,9 @@ function createCard(сardTitle, cardImage, initialLikes, userId) {
 
 // ДОБАВЛЕНИЕ СОЗДАННЫХ КАРТОЧЕК В РАЗМЕТКУ
 
-function addCard(cardTitle, cardImage, initialLikes, userId) {
-    // функция создания карточек
-    const card = createCard(cardTitle, cardImage, initialLikes, userId);
-    cardsContainer.prepend(card); // создаю карточку с записанными данными в параметр cardElement
+function addCard(cardTitle, cardImage, initialLikes, userId, cardOwner) {
+    const card = createCard(cardTitle, cardImage, initialLikes, userId, cardOwner);
+    cardsContainer.prepend(card);
 }
 
 //  ОТПРАВКА ФОРМЫ
@@ -222,6 +235,7 @@ function handlerAddFormSubmit(event) {
     const cardTitle = title.value; // приравниваю записанное значение поля залоговка к параметру фунции создания карточки
     const cardImage = image.value; // приравниваю записанное значение поля ссылки к параметру функции создания карточки
 
+    sendCards(cardTitle, cardImage, currentUser);
     addCard(cardTitle, cardImage, 0, currentUser); // запускается функция создания карточки и добавления в DOM
     closePopup(popupAdd); // форма была отправлена, попап закрывается
     event.target.reset(); // поля формы очищаются после закрытия попап
@@ -235,7 +249,7 @@ function handlerEditFormSubmit() {
     profileNameSaved.textContent = profileNameOld.value; // контент дефолтного поля Имя теперь равняется value Имени в форме
     profileDescriptionSaved.textContent = profileDescriptionOld.value; // контент дефолтного поля описания теперь равняется value описания в форме
     closePopup(popupEdit); // функция сохранения информации отработала и при этом попап закрылся, очистки формы не происходит, т.к. в данном случае нет
-    sendMyProfile(profileNameSaved.textContent, profileDescriptionSaved.textContent);
+    getMyProfile(profileNameOld.value, profileDescriptionOld.value);
 }
 
 // ОТКРЫТИЕ ПОПАП С ИЗОБРАЖЕНИЕМ

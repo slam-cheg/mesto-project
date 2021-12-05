@@ -17,13 +17,14 @@ function getInitialCards() {
 
 function getMyId() {
     return fetch("https://nomoreparties.co/v1/plus-cohort-4/users/me", {
+        method: "GET",
         headers: {
             authorization: "63df2546-4d95-4a42-b062-f15b89a1551f",
         },
-    });
+    })
 }
 
-function getMyProfile(name, about) {
+const getMyProfile = (name, about) => {
     return fetch("https://nomoreparties.co/v1/plus-cohort-4/users/me", {
         method: "PATCH",
         headers: {
@@ -33,13 +34,52 @@ function getMyProfile(name, about) {
         body: JSON.stringify({
             name: `${name}`,
             about: `${about}`,
+            _id: "6043356bdb4f546a17e4e66d",
         }),
+    })
+        .then((res) => {
+            if (res.ok) {
+                return res.json();
+            }
+            return Promise.reject(`Ошибка: ${res.status}`);
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+};
+
+const getMyAvatar = (avatar) => {
+    return fetch("https://nomoreparties.co/v1/plus-cohort-4/users/me/avatar", {
+        method: "PATCH",
+        headers: {
+            "authorization": "63df2546-4d95-4a42-b062-f15b89a1551f",
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            avatar: `${avatar}`,
+        }),
+    })
+        .then((res) => {
+            if (res.ok) {
+                return res.json();
+            }
+            return Promise.reject(`Ошибка: ${res.status}`);
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+};
+
+const getUsers = () => {
+    return fetch("https://nomoreparties.co/v1/plus-cohort-4/users", {
+        headers: {
+            authorization: "63df2546-4d95-4a42-b062-f15b89a1551f",
+        },
     });
+};
 
-}
-
-function sendMyProfile(name, about) {
-    return fetch("https://nomoreparties.co/v1/plus-cohort-4/users/me", {
+const sendCards = (name, link, userId) => {
+    return fetch("https://nomoreparties.co/v1/plus-cohort-4/cards", {
         method: "POST",
         headers: {
             "authorization": "63df2546-4d95-4a42-b062-f15b89a1551f",
@@ -47,33 +87,19 @@ function sendMyProfile(name, about) {
         },
         body: JSON.stringify({
             name: `${name}`,
-            about: `${about}`,
+            link: `${link}`,
+            _id: `${userId}`,
         }),
-    });
-
-}
-
-function sendCards() {
-    return fetch("https://nomoreparties.co/v1/plus-cohort-4/cards", {
-        method: "POST",
-        headers: {
-            "authorization": "c56e30dc-2883-4270-a59e-b2f7bae969c6",
-            "Content-Type": "json",
-        },
-    });
-}
-
-const getUsers = () => {
-    return fetch("https://nomoreparties.co/v1/plus-cohort-4/users", {
-        headers: {
-            authorization: "63df2546-4d95-4a42-b062-f15b89a1551f",
-        },
     })
-        .then((res) => res.json())
-        .then((result) => {})
+        .then((res) => {
+            if (res.ok) {
+                return res.json();
+            }
+            return Promise.reject(`Ошибка: ${res.status}`);
+        })
         .catch((err) => {
             console.log(err);
         });
 };
 
-export { getInitialCards, getUsers, getMyId, getMyProfile, sendMyProfile };
+export { getInitialCards, getUsers, getMyId, getMyProfile, getMyAvatar, sendCards };

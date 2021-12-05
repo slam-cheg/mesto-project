@@ -1,6 +1,6 @@
 // Импорты
 import "./index.css";
-import { getInitialCards, getUsers, getMyId, getMyProfile, getMyAvatar, sendCards } from "../components/api.js";
+import { getInitialCards, getUsers, getMyId, getMyProfile, getMyAvatar, sendCards, deleteCards, sendLike, deleteLike } from "../components/api.js";
 import { setEventListeners, checkInputValidity, showInputError, hideInputError, enableValidation, hasInvalidInput, toggleButtonState, settings } from "../components/validate.js"; // валидация форм
 import { openPopup, closePopup, closeByEscape, handleOverlayClick } from "../components/modal.js"; // открытие и закрытие попапов
 import "../images/icon.ico";
@@ -8,14 +8,14 @@ import { global } from "core-js";
 
 //Запуск всех функций
 
-api();
+updateServerCards();
 getCurrentUser();
 updateProfile();
 enableValidation(settings);
 
 // ОБЪЯВЛЕНИЕ ВСЕХ ПЕРЕМЕННЫХ
 
-let currentUser;
+let currentUserId;
 const modals = document.querySelectorAll(".popup");
 
 // попап редактирования профиля
@@ -27,6 +27,7 @@ const profileNameSaved = document.querySelector(".profile__name"); // нахож
 const profileDescriptionSaved = document.querySelector(".profile__description"); // нахожу описание профиля записаное по дефолту в разметке html
 const profileNameOld = formEdit.querySelector(".popup__form-input_name"); // нашел поле имени в форме редактирования и прировнял его value к тексту имени в html разметке
 const profileDescriptionOld = formEdit.querySelector(".popup__form-input_job"); // нашел поле описания в форме редактирования и прировнял его value к тексту описания в html разметке
+const popupEditButton = document.querySelector(".popup__form-button_edit");
 
 // попап добавления карточек
 const popupAdd = document.querySelector(".popup_add"); // нашел в документе попап добавления карточки
@@ -60,6 +61,7 @@ const popupAvatar = document.querySelector(".popup_avatar-edit"); // нашел 
 const formAvatar = popupAvatar.querySelector(".popup__form_avatar-edit"); // нашел форму редактирования аватара
 const avatarInput = formAvatar.querySelector(".popup__form-input_avatar-edit"); // нашел поле в форме отвечающее за ссылку на новый аватар
 const closeButtonAvatar = popupAvatar.querySelector(".popup__close-button_avatar-edit");
+const avatarEditButton = formAvatar.querySelector(".popup__form-button_avatar-edit");
 
 // ВСЕ СЛУШАТЕЛИ СОБЫТИЙ
 
@@ -86,9 +88,23 @@ function handlerAvatarFormSubmit(event) {
 
     const newAvatar = avatarInput.value; // приравниваю записанное значение поля залоговка к параметру фунции создания карточки
     avatarOld.src = newAvatar;
+    renderLoading(true, avatarEditButton);
+    getMyAvatar(newAvatar)
+        .then((res) => {
+            if (res.ok) {
+                return res.json();
+            }
+            return Promise.reject(`Ошибка: ${res.status}`);
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+        .finally(() => {
+            renderLoading(false, avatarEditButton);
+        });
 
     closePopup(popupAvatar); // форма была отправлена, попап закрывается
-    getMyAvatar(newAvatar);
+    avatarInput.value = "";
 }
 
 // Загрузка имени и описания профиля с сервера
@@ -126,23 +142,25 @@ function reWrite() {
 function addLike(event) {
     // создаю функцию события в документе
 
-    const likeHeart = event.target; // "цель" события сердечко записываю в переменную
-    const likesContainer = likeHeart.closest(".element__likes"); // нахожу ближайший родительский див к сердечку
-    const likeCount = likesContainer.querySelector(".element__like-count"); // нахожу в этом диве цифру количества лайков
-    let count = likeCount.textContent; // пишу переменную подсчета и с текущим значением количества лайков
-    count = Number.parseInt(count);
-    console.log(typeof count);
+    const likeHeart = event.target;
+    const likesContainer = likeHeart.closest(".element__likes");
+    const currentCard = likeHeart.closest(".element");
+    const likeCount = likesContainer.querySelector(".element__like-count");
+    let count = likeCount.textContent;
+    const cardId = currentCard.id;
+
     if (!likeHeart.classList.contains("element__like_active")) {
-        likeCount.textContent = count + 1; // то цифра количества лайков прибавляется на 1.
+        likeCount.textContent = Number.parseInt(count) + 1;
+        sendLike(cardId);
     } else {
-        // в обратном случае
-        likeCount.textContent = count - 1; // цифра количества лайков вычитается из текущего значения.
+        likeCount.textContent = count - 1;
+        deleteLike(cardId);
     }
 
-    likeHeart.classList.toggle("element__like_active"); // у сердечка переключается класс
+    likeHeart.classList.toggle("element__like_active");
 }
 
-function api() {
+function updateServerCards() {
     getInitialCards()
         .then((res) => {
             if (res.ok) {
@@ -151,20 +169,21 @@ function api() {
             return Promise.reject(`Ошибка: ${res.status}`);
         })
         .then((res) => {
-            render(res);
+            renderCards(res);
         })
         .catch((err) => {
             console.log(err);
         });
 }
 
-function render(arr) {
+function renderCards(arr) {
     arr.reverse().forEach((item) => {
         const cardTitle = item.name;
         const cardImage = item.link;
         const initialLikes = item.likes;
         const cardOwner = item.owner._id;
-        addCard(cardTitle, cardImage, initialLikes, cardOwner);
+        const cardId = item._id;
+        addCard(cardTitle, cardImage, initialLikes, cardOwner, cardId);
     });
 }
 // СОЗДАНИЕ КАРТОЧЕК
@@ -178,37 +197,42 @@ function getCurrentUser() {
             return Promise.reject(`Ошибка: ${res.status}`);
         })
         .then((user) => {
-            userId(user);
+            getUserId(user);
         })
         .catch((err) => {
             console.log(err);
         });
 }
 
-function userId(user) {
-    currentUser = user._id;
+function getUserId(user) {
+    currentUserId = user._id;
 }
 
-function createCard(сardTitle, cardImage, initialLikes, cardOwner) {
+function createCard(сardTitle, cardImage, initialLikes, cardOwner, cardId) {
     const cardElement = cardTemplate.querySelector(".element").cloneNode(true);
-    let likeCount = cardElement.querySelector(".element__like-count").textContent;
+    const initialLikeHeart = cardElement.querySelector(".element__like");
+    let likeCount = cardElement.querySelector(".element__like-count");
+    let initialCardId = cardId;
     const bucket = cardElement.querySelector(".element__delete");
-
-    cardElement._id = cardOwner;
+    cardElement.owner = cardOwner;
+    cardElement.id = initialCardId;
     cardElement.querySelector(".element__title").textContent = сardTitle; // записываю параметр заголовка в соответствующий тег разметки html
     cardElement.querySelector(".element__image").src = cardImage; // записываю параметр изображения в соответствующий тег разметки html
     cardElement.querySelector(".element__image").alt = сardTitle; // записываю параметр заголовка в alt изображения
-
-    if (initialLikes) {
-        likeCount = initialLikes.length;
-    } else {
-        likeCount = 0;
-    }
-    if (cardOwner !== currentUser) {
+    likeCount.textContent = initialLikes.length;
+    if (cardOwner !== currentUserId) {
         bucket.classList.add("element__delete_deactive");
     }
+    if (initialLikes) {
+        initialLikes.forEach((user) => {
+            if (user._id === currentUserId) {
+                initialLikeHeart.classList.add("element__like_active");
+            }
+        });
+    } else {
+        likeCount.textContent = 0;
+    }
 
-    //для каждой добавляемой карточки добавляю слушетелей событий
     cardElement.querySelector(".element__like").addEventListener("click", addLike);
     cardElement.querySelector(".element__image").addEventListener("click", renderingImage); // запускает функцию приравнивания картинки в карточке к картинке в попапе с большим изображением
     cardElement.querySelector(".element__delete").addEventListener("click", confirming); // удаляет карточку из html разметки
@@ -218,22 +242,35 @@ function createCard(сardTitle, cardImage, initialLikes, cardOwner) {
 
 // ДОБАВЛЕНИЕ СОЗДАННЫХ КАРТОЧЕК В РАЗМЕТКУ
 
-function addCard(cardTitle, cardImage, initialLikes, cardOwner) {
-    const card = createCard(cardTitle, cardImage, initialLikes, cardOwner);
+function addCard(cardTitle, cardImage, initialLikes, cardOwner, cardId) {
+    const card = createCard(cardTitle, cardImage, initialLikes, cardOwner, cardId);
     cardsContainer.prepend(card);
 }
 
 //  ОТПРАВКА ФОРМЫ
 
 function handlerAddFormSubmit(event) {
-    // Обработчик «отправки» формы
-    event.preventDefault(); // Эта строчка отменяет стандартную отправку формы.
+    event.preventDefault();
+    renderLoading(true, popupFormButton);
+    const cardTitle = title.value;
+    const cardImage = image.value;
+    sendCards(cardTitle, cardImage, currentUserId)
+        .then((res) => {
+            if (res.ok) {
+                return res.json();
+            }
+            return Promise.reject(`Ошибка: ${res.status}`);
+        })
+        .then((res) => {
+            addCard(cardTitle, cardImage, 0, currentUserId, res._id);
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+        .finally(() => {
+            renderLoading(false, popupFormButton);
+        });
 
-    const cardTitle = title.value; // приравниваю записанное значение поля залоговка к параметру фунции создания карточки
-    const cardImage = image.value; // приравниваю записанное значение поля ссылки к параметру функции создания карточки
-
-    sendCards(cardTitle, cardImage, currentUser);
-    addCard(cardTitle, cardImage, 0, currentUser); // запускается функция создания карточки и добавления в DOM
     closePopup(popupAdd); // форма была отправлена, попап закрывается
     event.target.reset(); // поля формы очищаются после закрытия попап
     popupFormButton.classList.add("popup__form-button_disabled");
@@ -246,7 +283,20 @@ function handlerEditFormSubmit() {
     profileNameSaved.textContent = profileNameOld.value; // контент дефолтного поля Имя теперь равняется value Имени в форме
     profileDescriptionSaved.textContent = profileDescriptionOld.value; // контент дефолтного поля описания теперь равняется value описания в форме
     closePopup(popupEdit); // функция сохранения информации отработала и при этом попап закрылся, очистки формы не происходит, т.к. в данном случае нет
-    getMyProfile(profileNameOld.value, profileDescriptionOld.value);
+    renderLoading(true, popupEditButton);
+    getMyProfile(profileNameOld.value, profileDescriptionOld.value)
+        .then((res) => {
+            if (res.ok) {
+                return res.json();
+            }
+            return Promise.reject(`Ошибка: ${res.status}`);
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+        .finally(() => {
+            renderLoading(false, popupEditButton);
+        });
 }
 
 // ОТКРЫТИЕ ПОПАП С ИЗОБРАЖЕНИЕМ
@@ -273,6 +323,29 @@ function confirming(event) {
 // УДАЛЕНИЕ КАРТОЧЕК
 
 function deleting() {
-    deletingItem.remove(); // удаляю карточку
+    const deletingItemId = deletingItem.id;
+    renderLoading(true, confirmButton);
+    deleteCards(deletingItemId)
+        .then((res) => {
+            if (res.ok) {
+                return res.json();
+            }
+            return Promise.reject(`Ошибка: ${res.status}`);
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+        .finally(() => {
+            renderLoading(false, confirmButton);
+        });
+    deletingItem.remove();
     closePopup(popupConfirm); // попап подтверждения отработал и закрывается
+}
+
+function renderLoading(isLoading, currentButton) {
+    if (isLoading) {
+        currentButton.textContent = "Сохранение...";
+    } else {
+        currentButton.textContent = "Сохранить";
+    }
 }

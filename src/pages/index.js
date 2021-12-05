@@ -151,7 +151,6 @@ function api() {
             return Promise.reject(`Ошибка: ${res.status}`);
         })
         .then((res) => {
-            console.log(res);
             render(res);
         })
         .catch((err) => {
@@ -164,9 +163,8 @@ function render(arr) {
         const cardTitle = item.name;
         const cardImage = item.link;
         const initialLikes = item.likes;
-        const userId = item._id;
-        const cardOwner = item.owner;
-        addCard(cardTitle, cardImage, initialLikes, userId, cardOwner);
+        const cardOwner = item.owner._id;
+        addCard(cardTitle, cardImage, initialLikes, cardOwner);
     });
 }
 // СОЗДАНИЕ КАРТОЧЕК
@@ -180,7 +178,6 @@ function getCurrentUser() {
             return Promise.reject(`Ошибка: ${res.status}`);
         })
         .then((user) => {
-            console.log(user);
             userId(user);
         })
         .catch((err) => {
@@ -189,15 +186,15 @@ function getCurrentUser() {
 }
 
 function userId(user) {
-    currentUser = user;
+    currentUser = user._id;
 }
 
-function createCard(сardTitle, cardImage, initialLikes, userId, cardOwner) {
+function createCard(сardTitle, cardImage, initialLikes, cardOwner) {
     const cardElement = cardTemplate.querySelector(".element").cloneNode(true);
     let likeCount = cardElement.querySelector(".element__like-count").textContent;
     const bucket = cardElement.querySelector(".element__delete");
 
-    cardElement.owner = cardOwner;
+    cardElement._id = cardOwner;
     cardElement.querySelector(".element__title").textContent = сardTitle; // записываю параметр заголовка в соответствующий тег разметки html
     cardElement.querySelector(".element__image").src = cardImage; // записываю параметр изображения в соответствующий тег разметки html
     cardElement.querySelector(".element__image").alt = сardTitle; // записываю параметр заголовка в alt изображения
@@ -221,8 +218,8 @@ function createCard(сardTitle, cardImage, initialLikes, userId, cardOwner) {
 
 // ДОБАВЛЕНИЕ СОЗДАННЫХ КАРТОЧЕК В РАЗМЕТКУ
 
-function addCard(cardTitle, cardImage, initialLikes, userId, cardOwner) {
-    const card = createCard(cardTitle, cardImage, initialLikes, userId, cardOwner);
+function addCard(cardTitle, cardImage, initialLikes, cardOwner) {
+    const card = createCard(cardTitle, cardImage, initialLikes, cardOwner);
     cardsContainer.prepend(card);
 }
 

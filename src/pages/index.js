@@ -1,6 +1,6 @@
 // Импорты
 import "./index.css";
-import { getInitialCards, getUsers, getMyId, getMyProfile, getMyAvatar, sendCards, deleteCards, sendLike, deleteLike } from "../components/api.js";
+import { getInitialCards, getUsers, getMyProfile, updateMyProfile, getMyAvatar, sendCards, deleteCards, sendLike, deleteLike, config } from "../components/api.js";
 import { setEventListeners, checkInputValidity, showInputError, hideInputError, enableValidation, hasInvalidInput, toggleButtonState, settings } from "../components/validate.js"; // валидация форм
 import { openPopup, closePopup, closeByEscape, handleOverlayClick } from "../components/modal.js"; // открытие и закрытие попапов
 import "../images/icon.ico";
@@ -8,9 +8,6 @@ import { global } from "core-js";
 
 //Запуск всех функций
 
-updateServerCards();
-getCurrentUser();
-updateProfile();
 enableValidation(settings);
 
 // ОБЪЯВЛЕНИЕ ВСЕХ ПЕРЕМЕННЫХ
@@ -84,17 +81,15 @@ modals.forEach((popup) => {
 // ФУНКЦИЯ ЗАМЕНЫ АВАТАРА
 
 function handlerAvatarFormSubmit(event) {
-    event.preventDefault(); // Эта строчка отменяет стандартную отправку формы.
+    event.preventDefault();
 
-    const newAvatar = avatarInput.value; // приравниваю записанное значение поля залоговка к параметру фунции создания карточки
+    const newAvatar = avatarInput.value;
     avatarOld.src = newAvatar;
     renderLoading(true, avatarEditButton);
     getMyAvatar(newAvatar)
-        .then((res) => {
-            if (res.ok) {
-                return res.json();
-            }
-            return Promise.reject(`Ошибка: ${res.status}`);
+        .then(() => {
+            closePopup(popupAvatar);
+            avatarInput.value = "";
         })
         .catch((err) => {
             console.log(err);
@@ -102,33 +97,20 @@ function handlerAvatarFormSubmit(event) {
         .finally(() => {
             renderLoading(false, avatarEditButton);
         });
-
-    closePopup(popupAvatar); // форма была отправлена, попап закрывается
-    avatarInput.value = "";
 }
 
 // Загрузка имени и описания профиля с сервера
-function updateProfile() {
-    getUsers()
-        .then((res) => {
-            if (res.ok) {
-                return res.json();
-            }
-            return Promise.reject(`Ошибка: ${res.status}`);
-        })
-        .then((res) => {
-            res.forEach((user) => {
-                if (user._id === "6043356bdb4f546a17e4e66d") {
-                    profileNameSaved.textContent = user.name;
-                    profileDescriptionSaved.textContent = user.about;
-                    avatarOld.src = user.avatar;
-                }
-            });
-        })
-        .catch((err) => {
-            console.log(err);
-        });
-}
+
+getMyProfile()
+    .then((res) => {
+        avatarOld.src = res.avatar;
+        profileNameSaved.textContent = res.name;
+        profileDescriptionSaved.textContent = res.name;
+        currentUserId = res._id;
+    })
+    .catch((err) => {
+        console.log(err);
+    });
 
 // ФУНКЦИЯ ПОДГРУЖАЕТ ЗНАЧЕНИЯ ИМЕНИ И ОПИСАНИЯ ПРОФИЛЯ В POP-UP
 function reWrite() {
@@ -146,35 +128,28 @@ function addLike(event) {
     const likesContainer = likeHeart.closest(".element__likes");
     const currentCard = likeHeart.closest(".element");
     const likeCount = likesContainer.querySelector(".element__like-count");
-    let count = likeCount.textContent;
     const cardId = currentCard.id;
 
     if (!likeHeart.classList.contains("element__like_active")) {
-        likeCount.textContent = Number.parseInt(count) + 1;
-        sendLike(cardId);
-    } else {
-        likeCount.textContent = count - 1;
-        deleteLike(cardId);
-    }
-
-    likeHeart.classList.toggle("element__like_active");
-}
-
-function updateServerCards() {
-    getInitialCards()
-        .then((res) => {
-            if (res.ok) {
-                return res.json();
-            }
-            return Promise.reject(`Ошибка: ${res.status}`);
-        })
-        .then((res) => {
-            renderCards(res);
-        })
-        .catch((err) => {
-            console.log(err);
+        sendLike(cardId).then((res) => {
+            likeCount.textContent = res.likes.length;
+            likeHeart.classList.toggle("element__like_active");
         });
+    } else {
+        deleteLike(cardId).then((res) => {
+            likeCount.textContent = res.likes.length;
+            likeHeart.classList.toggle("element__like_active");
+        });
+    }
 }
+
+getInitialCards(config)
+    .then((res) => {
+        renderCards(res);
+    })
+    .catch((err) => {
+        console.log(err);
+    });
 
 function renderCards(arr) {
     arr.reverse().forEach((item) => {
@@ -188,30 +163,10 @@ function renderCards(arr) {
 }
 // СОЗДАНИЕ КАРТОЧЕК
 
-function getCurrentUser() {
-    getMyId()
-        .then((res) => {
-            if (res.ok) {
-                return res.json();
-            }
-            return Promise.reject(`Ошибка: ${res.status}`);
-        })
-        .then((user) => {
-            getUserId(user);
-        })
-        .catch((err) => {
-            console.log(err);
-        });
-}
-
-function getUserId(user) {
-    currentUserId = user._id;
-}
-
 function createCard(сardTitle, cardImage, initialLikes, cardOwner, cardId) {
     const cardElement = cardTemplate.querySelector(".element").cloneNode(true);
     const initialLikeHeart = cardElement.querySelector(".element__like");
-    let likeCount = cardElement.querySelector(".element__like-count");
+    let likeCount = (cardElement.querySelector(".element__like-count").textContent = initialLikes.length);
     let initialCardId = cardId;
     const bucket = cardElement.querySelector(".element__delete");
     cardElement.owner = cardOwner;
@@ -219,7 +174,6 @@ function createCard(сardTitle, cardImage, initialLikes, cardOwner, cardId) {
     cardElement.querySelector(".element__title").textContent = сardTitle; // записываю параметр заголовка в соответствующий тег разметки html
     cardElement.querySelector(".element__image").src = cardImage; // записываю параметр изображения в соответствующий тег разметки html
     cardElement.querySelector(".element__image").alt = сardTitle; // записываю параметр заголовка в alt изображения
-    likeCount.textContent = initialLikes.length;
     if (cardOwner !== currentUserId) {
         bucket.classList.add("element__delete_deactive");
     }
@@ -254,13 +208,7 @@ function handlerAddFormSubmit(event) {
     renderLoading(true, popupFormButton);
     const cardTitle = title.value;
     const cardImage = image.value;
-    sendCards(cardTitle, cardImage, currentUserId)
-        .then((res) => {
-            if (res.ok) {
-                return res.json();
-            }
-            return Promise.reject(`Ошибка: ${res.status}`);
-        })
+    sendCards(cardTitle, cardImage, currentUserId, config)
         .then((res) => {
             addCard(cardTitle, cardImage, 0, currentUserId, res._id);
         })
@@ -270,26 +218,19 @@ function handlerAddFormSubmit(event) {
         .finally(() => {
             renderLoading(false, popupFormButton);
         });
-
-    closePopup(popupAdd); // форма была отправлена, попап закрывается
-    event.target.reset(); // поля формы очищаются после закрытия попап
-    popupFormButton.classList.add("popup__form-button_disabled");
-    popupFormButton.setAttribute("disabled", true);
 }
 
 // РЕДАКТИРОВАНИЕ ПРОФИЛЯ // ОТПРАВКА ФОРМЫ
 
 function handlerEditFormSubmit() {
-    profileNameSaved.textContent = profileNameOld.value; // контент дефолтного поля Имя теперь равняется value Имени в форме
-    profileDescriptionSaved.textContent = profileDescriptionOld.value; // контент дефолтного поля описания теперь равняется value описания в форме
-    closePopup(popupEdit); // функция сохранения информации отработала и при этом попап закрылся, очистки формы не происходит, т.к. в данном случае нет
     renderLoading(true, popupEditButton);
-    getMyProfile(profileNameOld.value, profileDescriptionOld.value)
+    updateMyProfile(profileNameOld.value, profileDescriptionOld.value)
         .then((res) => {
-            if (res.ok) {
-                return res.json();
-            }
-            return Promise.reject(`Ошибка: ${res.status}`);
+            profileNameSaved.textContent = res.name;
+            profileDescriptionSaved.textContent = res.about;
+        })
+        .then(() => {
+            closePopup(popupEdit);
         })
         .catch((err) => {
             console.log(err);
@@ -316,7 +257,6 @@ function renderingImage(event) {
 function confirming(event) {
     const bucket = event.target; // записываю "цель" события в переменную
     deletingItem = bucket.closest(".element"); // записываю ближайший родительский Div в переменную
-
     openPopup(popupConfirm); // после этого открывается попап подтверждения удаления
 }
 
@@ -325,21 +265,19 @@ function confirming(event) {
 function deleting() {
     const deletingItemId = deletingItem.id;
     renderLoading(true, confirmButton);
-    deleteCards(deletingItemId)
-        .then((res) => {
-            if (res.ok) {
-                return res.json();
-            }
-            return Promise.reject(`Ошибка: ${res.status}`);
-        })
+    deleteCards(deletingItemId, config)
         .catch((err) => {
             console.log(err);
+        })
+        .then(() => {
+            deletingItem.remove();
+        })
+        .then(() => {
+            closePopup(popupConfirm);
         })
         .finally(() => {
             renderLoading(false, confirmButton);
         });
-    deletingItem.remove();
-    closePopup(popupConfirm); // попап подтверждения отработал и закрывается
 }
 
 function renderLoading(isLoading, currentButton) {

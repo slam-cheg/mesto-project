@@ -14,3 +14,6 @@
 
 ## Технологии примененные в работе:
 #### HTML, CSS, JavaScript, WebPack
+
+Посмотреть как все выглядит от лица моего пользователя можно по ссылке:
+https://slam-cheg.github.io/mesto-project/

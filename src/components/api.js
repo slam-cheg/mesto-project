@@ -1,27 +1,47 @@
-const getInitialCards = (config) => {
-    return fetch("https://nomoreparties.co/v1/plus-cohort-4/cards", {
+
+const config = {
+    baseUrl: "https://nomoreparties.co/v1/plus-cohort-4/",
+    headers: {
+        "authorization": "63df2546-4d95-4a42-b062-f15b89a1551f",
+        "Content-Type": "application/json",
+    },
+};
+
+const mainUrl = config.baseUrl;
+const token = config.headers.authorization;
+const contentType = config.headers["Content-Type"];
+
+const getInitialCards = () => {
+    return fetch(mainUrl + "cards", {
         method: "GET",
         headers: {
-            authorization: "63df2546-4d95-4a42-b062-f15b89a1551f",
+            "authorization": token,
+            "Content-Type": contentType["Content-Type"],
+
         },
     });
 };
 
-const getMyId = () => {
-    return fetch("https://nomoreparties.co/v1/plus-cohort-4/users/me", {
+
+const getMyProfile = () => {
+    return fetch(mainUrl + "users/me", {
         method: "GET",
         headers: {
-            authorization: "63df2546-4d95-4a42-b062-f15b89a1551f",
+            "authorization": token,
+            "Content-Type": contentType,
+
         },
     });
 };
 
-const getMyProfile = (name, about) => {
-    return fetch("https://nomoreparties.co/v1/plus-cohort-4/users/me", {
+
+const updateMyProfile = (name, about) => {
+    return fetch(mainUrl + "users/me", {
         method: "PATCH",
         headers: {
-            "authorization": "63df2546-4d95-4a42-b062-f15b89a1551f",
-            "Content-Type": "application/json",
+            "authorization": token,
+            "Content-Type": contentType,
+
         },
         body: JSON.stringify({
             name: `${name}`,
@@ -32,11 +52,11 @@ const getMyProfile = (name, about) => {
 };
 
 const getMyAvatar = (avatar) => {
-    return fetch("https://nomoreparties.co/v1/plus-cohort-4/users/me/avatar", {
+    return fetch(mainUrl + "users/me/avatar", {
         method: "PATCH",
         headers: {
-            "authorization": "63df2546-4d95-4a42-b062-f15b89a1551f",
-            "Content-Type": "application/json",
+            "authorization": token,
+            "Content-Type": contentType,
         },
         body: JSON.stringify({
             avatar: `${avatar}`,
@@ -45,19 +65,21 @@ const getMyAvatar = (avatar) => {
 };
 
 const getUsers = () => {
-    return fetch("https://nomoreparties.co/v1/plus-cohort-4/users", {
+
+    return fetch(mainUrl + "users", {
         headers: {
-            authorization: "63df2546-4d95-4a42-b062-f15b89a1551f",
+            "authorization": token,
+            "Content-Type": contentType,
         },
     });
 };
 
 const sendCards = (name, link, userId) => {
-    return fetch("https://nomoreparties.co/v1/plus-cohort-4/cards", {
+    return fetch(mainUrl + "cards", {
         method: "POST",
         headers: {
-            "authorization": "63df2546-4d95-4a42-b062-f15b89a1551f",
-            "Content-Type": "application/json",
+            "authorization": token,
+            "Content-Type": contentType,
         },
         body: JSON.stringify({
             name: `${name}`,
@@ -68,11 +90,11 @@ const sendCards = (name, link, userId) => {
 };
 
 const deleteCards = (cardId) => {
-    return fetch("https://nomoreparties.co/v1/plus-cohort-4/cards/" + `${cardId}`, {
+    return fetch(mainUrl + "cards/" + `${cardId}`, {
         method: "DELETE",
         headers: {
-            "authorization": "63df2546-4d95-4a42-b062-f15b89a1551f",
-            "Content-Type": "application/json",
+            "authorization": token,
+            "Content-Type": contentType,
         },
         body: JSON.stringify({
             _id: `${cardId}`,
@@ -81,11 +103,11 @@ const deleteCards = (cardId) => {
 };
 
 const sendLike = (cardId) => {
-    return fetch("https://nomoreparties.co/v1/plus-cohort-4/cards/likes/" + `${cardId}`, {
+    return fetch(mainUrl + "cards/likes/" + `${cardId}`, {
         method: "PUT",
         headers: {
-            "authorization": "63df2546-4d95-4a42-b062-f15b89a1551f",
-            "Content-Type": "application/json",
+            "authorization": token,
+            "Content-Type": contentType,
         },
         body: JSON.stringify({
             _id: `${cardId}`,
@@ -103,11 +125,11 @@ const sendLike = (cardId) => {
 };
 
 const deleteLike = (cardId) => {
-    return fetch("https://nomoreparties.co/v1/plus-cohort-4/cards/likes/" + `${cardId}`, {
+    return fetch(mainUrl + "cards/likes/" + `${cardId}`, {
         method: "DELETE",
         headers: {
-            "authorization": "63df2546-4d95-4a42-b062-f15b89a1551f",
-            "Content-Type": "application/json",
+            "authorization": token,
+            "Content-Type": contentType,
         },
         body: JSON.stringify({
             _id: `${cardId}`,

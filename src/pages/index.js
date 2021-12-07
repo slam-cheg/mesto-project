@@ -7,16 +7,15 @@ import { getInitialCards, getUsers, getMyProfile, updateMyProfile, getMyAvatar, 
 import { setEventListeners, checkInputValidity, showInputError, hideInputError, enableValidation, hasInvalidInput, toggleButtonState, settings } from "../components/validate.js"; // валидация форм
 import { openPopup, closePopup, closeByEscape, handleOverlayClick } from "../components/modal.js";
 import { addLike, renderLoading } from "../components/utils.js";
+import { renderCards, addCard, createCard } from "../components/card";
 import "../images/icon.ico";
 
 enableValidation(settings);
 
 // ОБЪЯВЛЕНИЕ ВСЕХ ПЕРЕМЕННЫХ
 
-let currentUserId;
+export let currentUserId;
 const modals = document.querySelectorAll(".popup");
-const cardsContainer = document.querySelector(".elements"); // нахожу в документе место, в которое добавляются все карточки
-const cardTemplate = document.querySelector("#card-template").content; // нахожу в документе шаблонную разметку для карточек
 
 // попап редактирования профиля
 const popupEdit = document.querySelector(".popup_edit"); // нашел в документе попап редактирования профиля
@@ -91,53 +90,6 @@ Promise.all([getInitialCards(config), getMyProfile(config)])
         console.log(err);
     });
 
-const renderCards = (arr) => {
-    arr.reverse().forEach((item) => {
-        const cardTitle = item.name;
-        const cardImage = item.link;
-        const initialLikes = item.likes;
-        const cardOwner = item.owner._id;
-        const cardId = item._id;
-        addCard(cardTitle, cardImage, initialLikes, cardOwner, cardId);
-    });
-};
-
-const createCard = (сardTitle, cardImage, initialLikes, cardOwner, cardId) => {
-    const cardElement = cardTemplate.querySelector(".element").cloneNode(true);
-    const initialLikeHeart = cardElement.querySelector(".element__like");
-    let likeCount = (cardElement.querySelector(".element__like-count").textContent = initialLikes.length);
-    let initialCardId = cardId;
-    const bucket = cardElement.querySelector(".element__delete");
-    cardElement.owner = cardOwner;
-    cardElement.id = initialCardId;
-    cardElement.querySelector(".element__title").textContent = сardTitle; // записываю параметр заголовка в соответствующий тег разметки html
-    cardElement.querySelector(".element__image").src = cardImage; // записываю параметр изображения в соответствующий тег разметки html
-    cardElement.querySelector(".element__image").alt = сardTitle; // записываю параметр заголовка в alt изображения
-    if (cardOwner !== currentUserId) {
-        bucket.classList.add("element__delete_deactive");
-    }
-    if (initialLikes) {
-        initialLikes.forEach((user) => {
-            if (user._id === currentUserId) {
-                initialLikeHeart.classList.add("element__like_active");
-            }
-        });
-    } else {
-        likeCount.textContent = 0;
-    }
-
-    cardElement.querySelector(".element__like").addEventListener("click", addLike);
-    cardElement.querySelector(".element__image").addEventListener("click", renderingImage); // запускает функцию приравнивания картинки в карточке к картинке в попапе с большим изображением
-    cardElement.querySelector(".element__delete").addEventListener("click", confirming); // удаляет карточку из html разметки
-
-    return cardElement;
-};
-
-const addCard = (cardTitle, cardImage, initialLikes, cardOwner, cardId) => {
-    const card = createCard(cardTitle, cardImage, initialLikes, cardOwner, cardId);
-    cardsContainer.prepend(card);
-};
-
 //  ОТПРАВКА ФОРМЫ // ЗАМЕНА АВАТАРА
 
 function handlerAvatarFormSubmit(event) {
@@ -200,7 +152,7 @@ function handlerEditFormSubmit() {
 
 // ОТКРЫТИЕ ПОПАП С ИЗОБРАЖЕНИЕМ
 
-function renderingImage(event) {
+export function renderingImage(event) {
     // Функция события открывающаяся по клику на изображения в карточках
     const itemImage = event.target; // "цель" данного события записываю в переменную
     popupImage.src = itemImage.src; // приравниваю значения SRC у картинки в карточке и у открывшейся картинки.
@@ -212,7 +164,7 @@ function renderingImage(event) {
 
 // ПОДТВЕРЖДЕНИЕ УДАЛЕНИЯ
 
-function confirming(event) {
+export function confirming(event) {
     const bucket = event.target; // записываю "цель" события в переменную
     deletingItem = bucket.closest(".element"); // записываю ближайший родительский Div в переменную
     openPopup(popupConfirm); // после этого открывается попап подтверждения удаления

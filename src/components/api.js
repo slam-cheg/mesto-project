@@ -6,33 +6,36 @@ const config = {
     },
 };
 
+const mainUrl = config.baseUrl;
+const token = config.headers.authorization;
+const contentType = config.headers["Content-Type"];
+
 const getInitialCards = () => {
-    return fetch(config.baseUrl + "cards", {
+    return fetch(mainUrl + "cards", {
         method: "GET",
         headers: {
-            "authorization": config.headers.authorization,
-            "Content-Type": config.headers["Content-Type"],
+            "authorization": token,
+            "Content-Type": contentType["Content-Type"],
         },
-    })
-        .then(checkResponse)
+    }).then(checkResponse);
 };
 
 const getMyProfile = () => {
-    return fetch(config.baseUrl + "users/me", {
+    return fetch(mainUrl + "users/me", {
         method: "GET",
         headers: {
-            "authorization": config.headers.authorization,
-            "Content-Type": config.headers["Content-Type"],
+            "authorization": token,
+            "Content-Type": contentType,
         },
     }).then(checkResponse);
 };
 
 const updateMyProfile = (name, about) => {
-    return fetch(config.baseUrl + "users/me", {
+    return fetch(mainUrl + "users/me", {
         method: "PATCH",
         headers: {
-            "authorization": config.headers.authorization,
-            "Content-Type": config.headers["Content-Type"],
+            "authorization": token,
+            "Content-Type": contentType,
         },
         body: JSON.stringify({
             name: `${name}`,
@@ -42,11 +45,11 @@ const updateMyProfile = (name, about) => {
 };
 
 const getMyAvatar = (avatar) => {
-    return fetch(config.baseUrl + "users/me/avatar", {
+    return fetch(mainUrl + "users/me/avatar", {
         method: "PATCH",
         headers: {
-            "authorization": config.headers.authorization,
-            "Content-Type": config.headers["Content-Type"],
+            "authorization": token,
+            "Content-Type": contentType,
         },
         body: JSON.stringify({
             avatar: `${avatar}`,
@@ -55,20 +58,20 @@ const getMyAvatar = (avatar) => {
 };
 
 const getUsers = () => {
-    return fetch(config.baseUrl + "users", {
+    return fetch(mainUrl + "users", {
         headers: {
-            "authorization": config.headers.authorization,
-            "Content-Type": config.headers["Content-Type"],
+            "authorization": token,
+            "Content-Type": contentType,
         },
     }).then(checkResponse);
 };
 
 const sendCards = (name, link, userId) => {
-    return fetch(config.baseUrl + "cards", {
+    return fetch(mainUrl + "cards", {
         method: "POST",
         headers: {
-            "authorization": config.headers.authorization,
-            "Content-Type": config.headers["Content-Type"],
+            "authorization": token,
+            "Content-Type": contentType,
         },
         body: JSON.stringify({
             name: `${name}`,
@@ -79,11 +82,11 @@ const sendCards = (name, link, userId) => {
 };
 
 const deleteCards = (cardId) => {
-    return fetch(config.baseUrl + "cards/" + `${cardId}`, {
+    return fetch(mainUrl + "cards/" + `${cardId}`, {
         method: "DELETE",
         headers: {
-            "authorization": config.headers.authorization,
-            "Content-Type": config.headers["Content-Type"],
+            "authorization": token,
+            "Content-Type": contentType,
         },
         body: JSON.stringify({
             _id: `${cardId}`,
@@ -92,11 +95,11 @@ const deleteCards = (cardId) => {
 };
 
 const sendLike = (cardId) => {
-    return fetch(config.baseUrl + "cards/likes/" + `${cardId}`, {
+    return fetch(mainUrl + "cards/likes/" + `${cardId}`, {
         method: "PUT",
         headers: {
-            "authorization": config.headers.authorization,
-            "Content-Type": config.headers["Content-Type"],
+            "authorization": token,
+            "Content-Type": contentType,
         },
         body: JSON.stringify({
             _id: `${cardId}`,
@@ -109,11 +112,11 @@ const sendLike = (cardId) => {
 };
 
 const deleteLike = (cardId) => {
-    return fetch(config.baseUrl + "cards/likes/" + `${cardId}`, {
+    return fetch(mainUrl + "cards/likes/" + `${cardId}`, {
         method: "DELETE",
         headers: {
-            "authorization": config.headers.authorization,
-            "Content-Type": config.headers["Content-Type"],
+            "authorization": token,
+            "Content-Type": contentType,
         },
         body: JSON.stringify({
             _id: `${cardId}`,

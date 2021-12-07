@@ -13,7 +13,8 @@ const getInitialCards = () => {
             "authorization": config.headers.authorization,
             "Content-Type": config.headers["Content-Type"],
         },
-    }).then(checkResponse);
+    })
+        .then(checkResponse)
 };
 
 const getMyProfile = () => {

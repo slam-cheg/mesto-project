@@ -1,3 +1,4 @@
+
 const config = {
     baseUrl: "https://nomoreparties.co/v1/plus-cohort-4/",
     headers: {
@@ -16,9 +17,11 @@ const getInitialCards = () => {
         headers: {
             "authorization": token,
             "Content-Type": contentType["Content-Type"],
+
         },
-    }).then(checkResponse);
+    });
 };
+
 
 const getMyProfile = () => {
     return fetch(mainUrl + "users/me", {
@@ -26,9 +29,11 @@ const getMyProfile = () => {
         headers: {
             "authorization": token,
             "Content-Type": contentType,
+
         },
-    }).then(checkResponse);
+    });
 };
+
 
 const updateMyProfile = (name, about) => {
     return fetch(mainUrl + "users/me", {
@@ -36,12 +41,14 @@ const updateMyProfile = (name, about) => {
         headers: {
             "authorization": token,
             "Content-Type": contentType,
+
         },
         body: JSON.stringify({
             name: `${name}`,
             about: `${about}`,
+            _id: "6043356bdb4f546a17e4e66d",
         }),
-    }).then(checkResponse);
+    });
 };
 
 const getMyAvatar = (avatar) => {
@@ -54,16 +61,17 @@ const getMyAvatar = (avatar) => {
         body: JSON.stringify({
             avatar: `${avatar}`,
         }),
-    }).then(checkResponse);
+    });
 };
 
 const getUsers = () => {
+
     return fetch(mainUrl + "users", {
         headers: {
             "authorization": token,
             "Content-Type": contentType,
         },
-    }).then(checkResponse);
+    });
 };
 
 const sendCards = (name, link, userId) => {
@@ -78,7 +86,7 @@ const sendCards = (name, link, userId) => {
             link: `${link}`,
             _id: `${userId}`,
         }),
-    }).then(checkResponse);
+    });
 };
 
 const deleteCards = (cardId) => {
@@ -91,7 +99,7 @@ const deleteCards = (cardId) => {
         body: JSON.stringify({
             _id: `${cardId}`,
         }),
-    }).then(checkResponse);
+    });
 };
 
 const sendLike = (cardId) => {
@@ -105,7 +113,12 @@ const sendLike = (cardId) => {
             _id: `${cardId}`,
         }),
     })
-        .then(checkResponse)
+        .then((res) => {
+            if (res.ok) {
+                return res.json();
+            }
+            return Promise.reject(`Ошибка: ${res.status}`);
+        })
         .catch((err) => {
             console.log(err);
         });
@@ -121,18 +134,7 @@ const deleteLike = (cardId) => {
         body: JSON.stringify({
             _id: `${cardId}`,
         }),
-    })
-        .then(checkResponse)
-        .catch((err) => {
-            console.log(err);
-        });
+    });
 };
 
-function checkResponse(res) {
-    if (res.ok) {
-        return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-}
-
-export { getInitialCards, getUsers, getMyProfile, updateMyProfile, getMyAvatar, sendCards, deleteCards, sendLike, deleteLike, config };
+export { getInitialCards, getUsers, getMyId, getMyProfile, getMyAvatar, sendCards, deleteCards, sendLike, deleteLike };

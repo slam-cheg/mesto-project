@@ -3,13 +3,16 @@ import "core-js/stable";
 import "regenerator-runtime/runtime";
 
 import "./index.css";
-import { getInitialCards, getUsers, getMyProfile, updateMyProfile, getMyAvatar, sendCards, deleteCards, sendLike, deleteLike, config } from "../components/api.js";
+import { getInitialCards, getUsers, getMyId, getMyProfile, getMyAvatar, sendCards, deleteCards, sendLike, deleteLike } from "../components/api.js";
 import { setEventListeners, checkInputValidity, showInputError, hideInputError, enableValidation, hasInvalidInput, toggleButtonState, settings } from "../components/validate.js"; // валидация форм
 import { openPopup, closePopup, closeByEscape, handleOverlayClick } from "../components/modal.js";
 import { addLike, renderLoading } from "../components/utils.js";
 import { renderCards, addCard, createCard } from "../components/card";
 import "../images/icon.ico";
 
+updateServerCards();
+getCurrentUser();
+updateProfile();
 enableValidation(settings);
 
 // ОБЪЯВЛЕНИЕ ВСЕХ ПЕРЕМЕННЫХ
@@ -76,6 +79,7 @@ modals.forEach((popup) => {
     popup.addEventListener("click", handleOverlayClick);
 });
 
+
 Promise.all([getInitialCards(config), getMyProfile(config)])
     .then(([cards, userdata]) => {
         currentUserId = userdata._id;
@@ -118,7 +122,13 @@ function handlerAddFormSubmit(event) {
     renderLoading(true, popupFormButton);
     const cardTitle = title.value;
     const cardImage = image.value;
-    sendCards(cardTitle, cardImage, currentUserId, config)
+    sendCards(cardTitle, cardImage, currentUserId)
+        .then((res) => {
+            if (res.ok) {
+                return res.json();
+            }
+            return Promise.reject(`Ошибка: ${res.status}`);
+        })
         .then((res) => {
             addCard(cardTitle, cardImage, 0, currentUserId, res._id);
         })
@@ -128,19 +138,26 @@ function handlerAddFormSubmit(event) {
         .finally(() => {
             renderLoading(false, popupFormButton);
         });
+
+    closePopup(popupAdd); // форма была отправлена, попап закрывается
+    event.target.reset(); // поля формы очищаются после закрытия попап
+    popupFormButton.classList.add("popup__form-button_disabled");
+    popupFormButton.setAttribute("disabled", true);
 }
 
 //  ОТПРАВКА ФОРМЫ // РЕДАКТИРОВАНИЕ ПРОФИЛЯ
 
 function handlerEditFormSubmit() {
+    profileNameSaved.textContent = profileNameOld.value; // контент дефолтного поля Имя теперь равняется value Имени в форме
+    profileDescriptionSaved.textContent = profileDescriptionOld.value; // контент дефолтного поля описания теперь равняется value описания в форме
+    closePopup(popupEdit); // функция сохранения информации отработала и при этом попап закрылся, очистки формы не происходит, т.к. в данном случае нет
     renderLoading(true, popupEditButton);
-    updateMyProfile(profileNameOld.value, profileDescriptionOld.value)
+    getMyProfile(profileNameOld.value, profileDescriptionOld.value)
         .then((res) => {
-            profileNameSaved.textContent = res.name;
-            profileDescriptionSaved.textContent = res.about;
-        })
-        .then(() => {
-            closePopup(popupEdit);
+            if (res.ok) {
+                return res.json();
+            }
+            return Promise.reject(`Ошибка: ${res.status}`);
         })
         .catch((err) => {
             console.log(err);
@@ -167,6 +184,7 @@ export function renderingImage(event) {
 export function confirming(event) {
     const bucket = event.target; // записываю "цель" события в переменную
     deletingItem = bucket.closest(".element"); // записываю ближайший родительский Div в переменную
+
     openPopup(popupConfirm); // после этого открывается попап подтверждения удаления
 }
 
@@ -175,17 +193,19 @@ export function confirming(event) {
 function deleting() {
     const deletingItemId = deletingItem.id;
     renderLoading(true, confirmButton);
-    deleteCards(deletingItemId, config)
+    deleteCards(deletingItemId)
+        .then((res) => {
+            if (res.ok) {
+                return res.json();
+            }
+            return Promise.reject(`Ошибка: ${res.status}`);
+        })
         .catch((err) => {
             console.log(err);
-        })
-        .then(() => {
-            deletingItem.remove();
-        })
-        .then(() => {
-            closePopup(popupConfirm);
         })
         .finally(() => {
             renderLoading(false, confirmButton);
         });
+    deletingItem.remove();
+    closePopup(popupConfirm); // попап подтверждения отработал и закрывается
 }

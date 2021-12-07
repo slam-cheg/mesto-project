@@ -1,12 +1,10 @@
 function openPopup(currentPopup) {
-    // функция открытия попапов
-
-    currentPopup.classList.add("popup_opened"); // добавление класса у текущего попап
+    currentPopup.classList.add("popup_opened");
     window.addEventListener("keydown", closeByEscape);
 }
 
 function closePopup(currentPopup) {
-    currentPopup.classList.remove("popup_opened"); // переключение класса у текущего попап
+    currentPopup.classList.remove("popup_opened");
     window.removeEventListener("keydown", closeByEscape);
 }
 

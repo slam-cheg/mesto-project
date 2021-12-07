@@ -1,18 +1,20 @@
 // Импорты
+import "core-js/stable";
+import "regenerator-runtime/runtime";
+
 import "./index.css";
 import { getInitialCards, getUsers, getMyProfile, updateMyProfile, getMyAvatar, sendCards, deleteCards, sendLike, deleteLike, config } from "../components/api.js";
 import { setEventListeners, checkInputValidity, showInputError, hideInputError, enableValidation, hasInvalidInput, toggleButtonState, settings } from "../components/validate.js"; // валидация форм
-import { openPopup, closePopup, closeByEscape, handleOverlayClick } from "../components/modal.js"; // открытие и закрытие попапов
+import { openPopup, closePopup, closeByEscape, handleOverlayClick } from "../components/modal.js";
+import { addLike, renderLoading } from "../components/utils.js";
+import { renderCards, addCard, createCard } from "../components/card";
 import "../images/icon.ico";
-import { global } from "core-js";
-
-//Запуск всех функций
 
 enableValidation(settings);
 
 // ОБЪЯВЛЕНИЕ ВСЕХ ПЕРЕМЕННЫХ
 
-let currentUserId;
+export let currentUserId;
 const modals = document.querySelectorAll(".popup");
 
 // попап редактирования профиля
@@ -42,35 +44,31 @@ const popupImage = document.querySelector(".popup__image"); // нашел в д�
 const popupImageDescription = document.querySelector(".popup__image-alt"); // нашел в документе поле в котором должен отображаться Alt открывшегося изображения
 
 // попап подтверждения удаления карточки
-const popupConfirm = document.querySelector(".popup_confirm"); // нашел попап подтвержения удаления
-const confirmButton = popupConfirm.querySelector(".popup__confirm-button"); // кнопка подтверждения удаления
-const closeButtonConfirm = popupConfirm.querySelector(".popup__close-button_confirm"); // кнопка закрытия попапа удаления
-let deletingItem; // сюда будут записываться удаляемые карточки при открытии попапа подтверждения
-
-// переменные для рендера карточек "из коробки" и новых
-const cardsContainer = document.querySelector(".elements"); // нахожу в документе место, в которое добавляются все карточки
-const cardTemplate = document.querySelector("#card-template").content; // нахожу в документе шаблонную разметку для карточек
+const popupConfirm = document.querySelector(".popup_confirm");
+const confirmButton = popupConfirm.querySelector(".popup__confirm-button");
+const closeButtonConfirm = popupConfirm.querySelector(".popup__close-button_confirm");
+let deletingItem;
 
 // попап редактирования аватара
-const avatarOld = document.querySelector(".profile__avatar"); // аватар который изначально в документе
+const avatarOld = document.querySelector(".profile__avatar");
 const avatarCover = document.querySelector(".profile__avatar-cover");
-const popupAvatar = document.querySelector(".popup_avatar-edit"); // нашел попап редактирования аватара
-const formAvatar = popupAvatar.querySelector(".popup__form_avatar-edit"); // нашел форму редактирования аватара
-const avatarInput = formAvatar.querySelector(".popup__form-input_avatar-edit"); // нашел поле в форме отвечающее за ссылку на новый аватар
+const popupAvatar = document.querySelector(".popup_avatar-edit");
+const formAvatar = popupAvatar.querySelector(".popup__form_avatar-edit");
+const avatarInput = formAvatar.querySelector(".popup__form-input_avatar-edit");
 const closeButtonAvatar = popupAvatar.querySelector(".popup__close-button_avatar-edit");
 const avatarEditButton = formAvatar.querySelector(".popup__form-button_avatar-edit");
 
 // ВСЕ СЛУШАТЕЛИ СОБЫТИЙ
 
-addButton.addEventListener("click", () => openPopup(popupAdd)); // на кнопку "плюс" добавил слушатель событий который при клике запускает функцию с параметром currentPopup
-closeButtonAdd.addEventListener("click", () => closePopup(popupAdd)); // на кнопку закрытия попапа редактирования добавил слушатель событий который запускает функцию закрытия попап
-editButton.addEventListener("click", () => reWrite()); // на кнопку "карандашик" добавил слушатель событий который при клике запускает функцию открытия попап с предварительной подгрузкой значений в поля
-closeButtonEdit.addEventListener("click", () => closePopup(popupEdit)); // на кнопку закрытия попапа редактирования добавил слушатель событий который запускает функцию закрытия попап
-popupImageClose.addEventListener("click", () => closePopup(popupGallery)); // на кнопку закрытия попапа редактирования добавил слушатель событий который запускает функцию закрытия попап
-formAdd.addEventListener("submit", handlerAddFormSubmit); // Для формы добавления карточек добавил слушателя событий запускает функцию отправки формы при клике на кнопку сохранить
-formEdit.addEventListener("submit", handlerEditFormSubmit); // Для формы редактирования добавил слушателя событий запускает функцию отправки формы при клике на кнопку сохранить
+addButton.addEventListener("click", () => openPopup(popupAdd));
+closeButtonAdd.addEventListener("click", () => closePopup(popupAdd));
+editButton.addEventListener("click", () => openPopup(popupEdit));
+closeButtonEdit.addEventListener("click", () => closePopup(popupEdit));
+popupImageClose.addEventListener("click", () => closePopup(popupGallery));
+formAdd.addEventListener("submit", handlerAddFormSubmit);
+formEdit.addEventListener("submit", handlerEditFormSubmit);
 confirmButton.addEventListener("click", deleting);
-closeButtonConfirm.addEventListener("click", () => closePopup(popupConfirm)); // закроется только попап продтверждения
+closeButtonConfirm.addEventListener("click", () => closePopup(popupConfirm));
 avatarCover.addEventListener("click", () => openPopup(popupAvatar));
 closeButtonAvatar.addEventListener("click", () => closePopup(popupAvatar));
 formAvatar.addEventListener("submit", handlerAvatarFormSubmit);
@@ -78,7 +76,21 @@ modals.forEach((popup) => {
     popup.addEventListener("click", handleOverlayClick);
 });
 
-// ФУНКЦИЯ ЗАМЕНЫ АВАТАРА
+Promise.all([getInitialCards(config), getMyProfile(config)])
+    .then(([cards, userdata]) => {
+        currentUserId = userdata._id;
+        avatarOld.src = userdata.avatar;
+        profileNameSaved.textContent = userdata.name;
+        profileDescriptionSaved.textContent = userdata.about;
+        profileNameOld.value = userdata.name;
+        profileDescriptionOld.value = userdata.about;
+        renderCards(cards);
+    })
+    .catch((err) => {
+        console.log(err);
+    });
+
+//  ОТПРАВКА ФОРМЫ // ЗАМЕНА АВАТАРА
 
 function handlerAvatarFormSubmit(event) {
     event.preventDefault();
@@ -89,119 +101,17 @@ function handlerAvatarFormSubmit(event) {
     getMyAvatar(newAvatar)
         .then(() => {
             closePopup(popupAvatar);
-            avatarInput.value = "";
         })
         .catch((err) => {
             console.log(err);
         })
         .finally(() => {
             renderLoading(false, avatarEditButton);
+            avatarInput.value = "";
         });
 }
 
-// Загрузка имени и описания профиля с сервера
-
-getMyProfile()
-    .then((res) => {
-        avatarOld.src = res.avatar;
-        profileNameSaved.textContent = res.name;
-        profileDescriptionSaved.textContent = res.name;
-        currentUserId = res._id;
-    })
-    .catch((err) => {
-        console.log(err);
-    });
-
-// ФУНКЦИЯ ПОДГРУЖАЕТ ЗНАЧЕНИЯ ИМЕНИ И ОПИСАНИЯ ПРОФИЛЯ В POP-UP
-function reWrite() {
-    profileNameOld.value = profileNameSaved.textContent;
-    profileDescriptionOld.value = profileDescriptionSaved.textContent;
-    openPopup(popupEdit);
-}
-
-// ЛАЙКИ
-
-function addLike(event) {
-    // создаю функцию события в документе
-
-    const likeHeart = event.target;
-    const likesContainer = likeHeart.closest(".element__likes");
-    const currentCard = likeHeart.closest(".element");
-    const likeCount = likesContainer.querySelector(".element__like-count");
-    const cardId = currentCard.id;
-
-    if (!likeHeart.classList.contains("element__like_active")) {
-        sendLike(cardId).then((res) => {
-            likeCount.textContent = res.likes.length;
-            likeHeart.classList.toggle("element__like_active");
-        });
-    } else {
-        deleteLike(cardId).then((res) => {
-            likeCount.textContent = res.likes.length;
-            likeHeart.classList.toggle("element__like_active");
-        });
-    }
-}
-
-getInitialCards(config)
-    .then((res) => {
-        renderCards(res);
-    })
-    .catch((err) => {
-        console.log(err);
-    });
-
-function renderCards(arr) {
-    arr.reverse().forEach((item) => {
-        const cardTitle = item.name;
-        const cardImage = item.link;
-        const initialLikes = item.likes;
-        const cardOwner = item.owner._id;
-        const cardId = item._id;
-        addCard(cardTitle, cardImage, initialLikes, cardOwner, cardId);
-    });
-}
-// СОЗДАНИЕ КАРТОЧЕК
-
-function createCard(сardTitle, cardImage, initialLikes, cardOwner, cardId) {
-    const cardElement = cardTemplate.querySelector(".element").cloneNode(true);
-    const initialLikeHeart = cardElement.querySelector(".element__like");
-    let likeCount = (cardElement.querySelector(".element__like-count").textContent = initialLikes.length);
-    let initialCardId = cardId;
-    const bucket = cardElement.querySelector(".element__delete");
-    cardElement.owner = cardOwner;
-    cardElement.id = initialCardId;
-    cardElement.querySelector(".element__title").textContent = сardTitle; // записываю параметр заголовка в соответствующий тег разметки html
-    cardElement.querySelector(".element__image").src = cardImage; // записываю параметр изображения в соответствующий тег разметки html
-    cardElement.querySelector(".element__image").alt = сardTitle; // записываю параметр заголовка в alt изображения
-    if (cardOwner !== currentUserId) {
-        bucket.classList.add("element__delete_deactive");
-    }
-    if (initialLikes) {
-        initialLikes.forEach((user) => {
-            if (user._id === currentUserId) {
-                initialLikeHeart.classList.add("element__like_active");
-            }
-        });
-    } else {
-        likeCount.textContent = 0;
-    }
-
-    cardElement.querySelector(".element__like").addEventListener("click", addLike);
-    cardElement.querySelector(".element__image").addEventListener("click", renderingImage); // запускает функцию приравнивания картинки в карточке к картинке в попапе с большим изображением
-    cardElement.querySelector(".element__delete").addEventListener("click", confirming); // удаляет карточку из html разметки
-
-    return cardElement;
-}
-
-// ДОБАВЛЕНИЕ СОЗДАННЫХ КАРТОЧЕК В РАЗМЕТКУ
-
-function addCard(cardTitle, cardImage, initialLikes, cardOwner, cardId) {
-    const card = createCard(cardTitle, cardImage, initialLikes, cardOwner, cardId);
-    cardsContainer.prepend(card);
-}
-
-//  ОТПРАВКА ФОРМЫ
+//  ОТПРАВКА ФОРМЫ // ДОБАВЛЕНИЕ КАРТОЧКИ
 
 function handlerAddFormSubmit(event) {
     event.preventDefault();
@@ -220,7 +130,7 @@ function handlerAddFormSubmit(event) {
         });
 }
 
-// РЕДАКТИРОВАНИЕ ПРОФИЛЯ // ОТПРАВКА ФОРМЫ
+//  ОТПРАВКА ФОРМЫ // РЕДАКТИРОВАНИЕ ПРОФИЛЯ
 
 function handlerEditFormSubmit() {
     renderLoading(true, popupEditButton);
@@ -242,7 +152,7 @@ function handlerEditFormSubmit() {
 
 // ОТКРЫТИЕ ПОПАП С ИЗОБРАЖЕНИЕМ
 
-function renderingImage(event) {
+export function renderingImage(event) {
     // Функция события открывающаяся по клику на изображения в карточках
     const itemImage = event.target; // "цель" данного события записываю в переменную
     popupImage.src = itemImage.src; // приравниваю значения SRC у картинки в карточке и у открывшейся картинки.
@@ -254,7 +164,7 @@ function renderingImage(event) {
 
 // ПОДТВЕРЖДЕНИЕ УДАЛЕНИЯ
 
-function confirming(event) {
+export function confirming(event) {
     const bucket = event.target; // записываю "цель" события в переменную
     deletingItem = bucket.closest(".element"); // записываю ближайший родительский Div в переменную
     openPopup(popupConfirm); // после этого открывается попап подтверждения удаления
@@ -278,12 +188,4 @@ function deleting() {
         .finally(() => {
             renderLoading(false, confirmButton);
         });
-}
-
-function renderLoading(isLoading, currentButton) {
-    if (isLoading) {
-        currentButton.textContent = "Сохранение...";
-    } else {
-        currentButton.textContent = "Сохранить";
-    }
 }

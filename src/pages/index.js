@@ -2,9 +2,9 @@
 import "./index.css";
 import { getInitialCards, getUsers, getMyProfile, updateMyProfile, getMyAvatar, sendCards, deleteCards, sendLike, deleteLike, config } from "../components/api.js";
 import { setEventListeners, checkInputValidity, showInputError, hideInputError, enableValidation, hasInvalidInput, toggleButtonState, settings } from "../components/validate.js"; // валидация форм
-import { openPopup, closePopup, closeByEscape, handleOverlayClick } from "../components/modal.js"; // открытие и закрытие попапов
+import { openPopup, closePopup, closeByEscape, handleOverlayClick } from "../components/modal.js";
 import "../images/icon.ico";
-import { global } from "core-js";
+import { data } from "autoprefixer";
 
 //Запуск всех функций
 
@@ -12,8 +12,11 @@ enableValidation(settings);
 
 // ОБЪЯВЛЕНИЕ ВСЕХ ПЕРЕМЕННЫХ
 
-let currentUserId;
+export let currentUserId;
 const modals = document.querySelectorAll(".popup");
+
+const cardsContainer = document.querySelector(".elements"); // нахожу в документе место, в которое добавляются все карточки
+const cardTemplate = document.querySelector("#card-template").content; // нахожу в документе шаблонную разметку для карточек
 
 // попап редактирования профиля
 const popupEdit = document.querySelector(".popup_edit"); // нашел в документе попап редактирования профиля
@@ -47,10 +50,6 @@ const confirmButton = popupConfirm.querySelector(".popup__confirm-button"); // �
 const closeButtonConfirm = popupConfirm.querySelector(".popup__close-button_confirm"); // кнопка закрытия попапа удаления
 let deletingItem; // сюда будут записываться удаляемые карточки при открытии попапа подтверждения
 
-// переменные для рендера карточек "из коробки" и новых
-const cardsContainer = document.querySelector(".elements"); // нахожу в документе место, в которое добавляются все карточки
-const cardTemplate = document.querySelector("#card-template").content; // нахожу в документе шаблонную разметку для карточек
-
 // попап редактирования аватара
 const avatarOld = document.querySelector(".profile__avatar"); // аватар который изначально в документе
 const avatarCover = document.querySelector(".profile__avatar-cover");
@@ -78,80 +77,26 @@ modals.forEach((popup) => {
     popup.addEventListener("click", handleOverlayClick);
 });
 
-// ФУНКЦИЯ ЗАМЕНЫ АВАТАРА
-
-function handlerAvatarFormSubmit(event) {
-    event.preventDefault();
-
-    const newAvatar = avatarInput.value;
-    avatarOld.src = newAvatar;
-    renderLoading(true, avatarEditButton);
-    getMyAvatar(newAvatar)
-        .then(() => {
-            closePopup(popupAvatar);
-            avatarInput.value = "";
-        })
-        .catch((err) => {
-            console.log(err);
-        })
-        .finally(() => {
-            renderLoading(false, avatarEditButton);
-        });
-}
-
-// Загрузка имени и описания профиля с сервера
-
-getMyProfile()
-    .then((res) => {
-        avatarOld.src = res.avatar;
-        profileNameSaved.textContent = res.name;
-        profileDescriptionSaved.textContent = res.name;
-        currentUserId = res._id;
-    })
-    .catch((err) => {
-        console.log(err);
-    });
-
-// ФУНКЦИЯ ПОДГРУЖАЕТ ЗНАЧЕНИЯ ИМЕНИ И ОПИСАНИЯ ПРОФИЛЯ В POP-UP
-function reWrite() {
-    profileNameOld.value = profileNameSaved.textContent;
-    profileDescriptionOld.value = profileDescriptionSaved.textContent;
-    openPopup(popupEdit);
-}
-
-// ЛАЙКИ
-
-function addLike(event) {
-    // создаю функцию события в документе
-
-    const likeHeart = event.target;
-    const likesContainer = likeHeart.closest(".element__likes");
-    const currentCard = likeHeart.closest(".element");
-    const likeCount = likesContainer.querySelector(".element__like-count");
-    const cardId = currentCard.id;
-
-    if (!likeHeart.classList.contains("element__like_active")) {
-        sendLike(cardId).then((res) => {
-            likeCount.textContent = res.likes.length;
-            likeHeart.classList.toggle("element__like_active");
-        });
-    } else {
-        deleteLike(cardId).then((res) => {
-            likeCount.textContent = res.likes.length;
-            likeHeart.classList.toggle("element__like_active");
-        });
-    }
-}
+// Promise.all([getInitialCards(config), getMyProfile(config)])
+//     .then((res) => {
+//         console.log(res);
+//         console.log(typeof res);
+//         renderCards(res[0]);
+//     })
+//     .catch((err) => {
+//         console.log(err);
+//     });
 
 getInitialCards(config)
     .then((res) => {
+        console.log(res);
         renderCards(res);
     })
     .catch((err) => {
         console.log(err);
     });
 
-function renderCards(arr) {
+const renderCards = (arr) => {
     arr.reverse().forEach((item) => {
         const cardTitle = item.name;
         const cardImage = item.link;
@@ -160,10 +105,9 @@ function renderCards(arr) {
         const cardId = item._id;
         addCard(cardTitle, cardImage, initialLikes, cardOwner, cardId);
     });
-}
-// СОЗДАНИЕ КАРТОЧЕК
+};
 
-function createCard(сardTitle, cardImage, initialLikes, cardOwner, cardId) {
+const createCard = (сardTitle, cardImage, initialLikes, cardOwner, cardId) => {
     const cardElement = cardTemplate.querySelector(".element").cloneNode(true);
     const initialLikeHeart = cardElement.querySelector(".element__like");
     let likeCount = (cardElement.querySelector(".element__like-count").textContent = initialLikes.length);
@@ -192,13 +136,72 @@ function createCard(сardTitle, cardImage, initialLikes, cardOwner, cardId) {
     cardElement.querySelector(".element__delete").addEventListener("click", confirming); // удаляет карточку из html разметки
 
     return cardElement;
-}
+};
 
-// ДОБАВЛЕНИЕ СОЗДАННЫХ КАРТОЧЕК В РАЗМЕТКУ
-
-function addCard(cardTitle, cardImage, initialLikes, cardOwner, cardId) {
+const addCard = (cardTitle, cardImage, initialLikes, cardOwner, cardId) => {
     const card = createCard(cardTitle, cardImage, initialLikes, cardOwner, cardId);
     cardsContainer.prepend(card);
+};
+
+const addLike = (event) => {
+    const likeHeart = event.target;
+    const likesContainer = likeHeart.closest(".element__likes");
+    const currentCard = likeHeart.closest(".element");
+    const likeCount = likesContainer.querySelector(".element__like-count");
+    const cardId = currentCard.id;
+
+    if (!likeHeart.classList.contains("element__like_active")) {
+        sendLike(cardId).then((res) => {
+            likeCount.textContent = res.likes.length;
+            likeHeart.classList.toggle("element__like_active");
+        });
+    } else {
+        deleteLike(cardId).then((res) => {
+            likeCount.textContent = res.likes.length;
+            likeHeart.classList.toggle("element__like_active");
+        });
+    }
+};
+
+// ФУНКЦИЯ ЗАМЕНЫ АВАТАРА
+
+function handlerAvatarFormSubmit(event) {
+    event.preventDefault();
+
+    const newAvatar = avatarInput.value;
+    avatarOld.src = newAvatar;
+    renderLoading(true, avatarEditButton);
+    getMyAvatar(newAvatar)
+        .then(() => {
+            closePopup(popupAvatar);
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+        .finally(() => {
+            renderLoading(false, avatarEditButton);
+            avatarInput.value = "";
+        });
+}
+
+// Загрузка имени и описания профиля с сервера
+
+getMyProfile()
+    .then((res) => {
+        avatarOld.src = res.avatar;
+        profileNameSaved.textContent = res.name;
+        profileDescriptionSaved.textContent = res.name;
+        currentUserId = res._id;
+    })
+    .catch((err) => {
+        console.log(err);
+    });
+
+// ФУНКЦИЯ ПОДГРУЖАЕТ ЗНАЧЕНИЯ ИМЕНИ И ОПИСАНИЯ ПРОФИЛЯ В POP-UP
+function reWrite() {
+    profileNameOld.value = profileNameSaved.textContent;
+    profileDescriptionOld.value = profileDescriptionSaved.textContent;
+    openPopup(popupEdit);
 }
 
 //  ОТПРАВКА ФОРМЫ

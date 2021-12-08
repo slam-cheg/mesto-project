@@ -3,10 +3,10 @@ import "core-js/stable";
 import "regenerator-runtime/runtime";
 
 import "./index.css";
-import { contentType, token, mainUrl, getInitialCards, getMyProfile, getMyAvatar, sendCards, deleteCards, sendLike, deleteLike, checkResponse } from "../components/api.js";
+import { contentType, token, mainUrl, getInitialCards, getMyProfile, getMyAvatar, sendCards, deleteCards, sendLike, deleteLike, checkResponse, updateMyProfile } from "../components/api.js";
 import { setEventListeners, checkInputValidity, showInputError, hideInputError, enableValidation, hasInvalidInput, toggleButtonState, settings } from "../components/validate.js"; // валидация форм
 import { openPopup, closePopup, closeByEscape, handleOverlayClick } from "../components/modal.js";
-import { addLike, renderLoading } from "../components/utils.js";
+import { renderLoading, reWrite } from "../components/utils.js";
 import { renderCards, addCard, createCard } from "../components/card";
 import "../images/icon.ico";
 
@@ -18,14 +18,14 @@ export let currentUserId;
 const modals = document.querySelectorAll(".popup");
 
 // попап редактирования профиля
-const popupEdit = document.querySelector(".popup_edit"); // нашел в документе попап редактирования профиля
+export const popupEdit = document.querySelector(".popup_edit"); // нашел в документе попап редактирования профиля
 const editButton = document.querySelector(".profile__edit-button"); // нашел в документе кнопку которая открывает попап редактирования профиля
 const closeButtonEdit = document.querySelector(".popup__close-button_edit"); // нашел в документе кнопку которая закрывает попап редактирования профиля
 const formEdit = document.querySelector(".popup__form_edit"); // Нахожу форму редактирования профиля
-const profileNameSaved = document.querySelector(".profile__name"); // нахожу имя профиля записаное по дефолту в разметке html
-const profileDescriptionSaved = document.querySelector(".profile__description"); // нахожу описание профиля записаное по дефолту в разметке html
-const profileNameOld = formEdit.querySelector(".popup__form-input_name"); // нашел поле имени в форме редактирования и прировнял его value к тексту имени в html разметке
-const profileDescriptionOld = formEdit.querySelector(".popup__form-input_job"); // нашел поле описания в форме редактирования и прировнял его value к тексту описания в html разметке
+export const profileNameSaved = document.querySelector(".profile__name"); // нахожу имя профиля записаное по дефолту в разметке html
+export const profileDescriptionSaved = document.querySelector(".profile__description"); // нахожу описание профиля записаное по дефолту в разметке html
+export const profileNameOld = formEdit.querySelector(".popup__form-input_name"); // нашел поле имени в форме редактирования и прировнял его value к тексту имени в html разметке
+export const profileDescriptionOld = formEdit.querySelector(".popup__form-input_job"); // нашел поле описания в форме редактирования и прировнял его value к тексту описания в html разметке
 const popupEditButton = document.querySelector(".popup__form-button_edit");
 
 // попап добавления карточек
@@ -62,7 +62,7 @@ const avatarEditButton = formAvatar.querySelector(".popup__form-button_avatar-ed
 
 addButton.addEventListener("click", () => openPopup(popupAdd));
 closeButtonAdd.addEventListener("click", () => closePopup(popupAdd));
-editButton.addEventListener("click", () => openPopup(popupEdit));
+editButton.addEventListener("click", () => reWrite());
 closeButtonEdit.addEventListener("click", () => closePopup(popupEdit));
 popupImageClose.addEventListener("click", () => closePopup(popupGallery));
 formAdd.addEventListener("submit", handlerAddFormSubmit);
@@ -82,8 +82,6 @@ Promise.all([getInitialCards(), getMyProfile()])
         avatarOld.src = userdata.avatar;
         profileNameSaved.textContent = userdata.name;
         profileDescriptionSaved.textContent = userdata.about;
-        profileNameOld.value = userdata.name;
-        profileDescriptionOld.value = userdata.about;
         renderCards(cards);
     })
     .catch((err) => {
@@ -95,19 +93,18 @@ Promise.all([getInitialCards(), getMyProfile()])
 function handlerAvatarFormSubmit(event) {
     event.preventDefault();
 
-    const newAvatar = avatarInput.value;
-    avatarOld.src = newAvatar;
     renderLoading(true, avatarEditButton);
-    getMyAvatar(newAvatar)
+    getMyAvatar(avatarInput.value)
         .then(() => {
+            avatarOld.src = avatarInput.value;
             closePopup(popupAvatar);
+            avatarInput.value = "";
         })
         .catch((err) => {
             console.log(err);
         })
         .finally(() => {
             renderLoading(false, avatarEditButton);
-            avatarInput.value = "";
         });
 }
 
@@ -121,8 +118,8 @@ function handlerAddFormSubmit(event) {
     sendCards(cardTitle, cardImage, currentUserId)
         .then((res) => {
             addCard(cardTitle, cardImage, 0, currentUserId, res._id);
-            closePopup(popupAdd); // форма была отправлена, попап закрывается
-            event.target.reset(); // поля формы очищаются после закрытия попап
+            closePopup(popupAdd);
+            event.target.reset();
             popupFormButton.classList.add("popup__form-button_disabled");
             popupFormButton.setAttribute("disabled", true);
         })
@@ -137,11 +134,13 @@ function handlerAddFormSubmit(event) {
 //  ОТПРАВКА ФОРМЫ // РЕДАКТИРОВАНИЕ ПРОФИЛЯ
 
 function handlerEditFormSubmit() {
-    profileNameSaved.textContent = profileNameOld.value; // контент дефолтного поля Имя теперь равняется value Имени в форме
-    profileDescriptionSaved.textContent = profileDescriptionOld.value; // контент дефолтного поля описания теперь равняется value описания в форме
-    closePopup(popupEdit); // функция сохранения информации отработала и при этом попап закрылся, очистки формы не происходит, т.к. в данном случае нет
     renderLoading(true, popupEditButton);
-    getMyProfile(profileNameOld.value, profileDescriptionOld.value)
+    updateMyProfile(profileNameOld.value, profileDescriptionOld.value)
+        .then(() => {
+            profileNameSaved.textContent = profileNameOld.value;
+            profileDescriptionSaved.textContent = profileDescriptionOld.value;
+            closePopup(popupEdit);
+        })
         .catch((err) => {
             console.log(err);
         })
@@ -153,12 +152,11 @@ function handlerEditFormSubmit() {
 // ОТКРЫТИЕ ПОПАП С ИЗОБРАЖЕНИЕМ
 
 export function renderingImage(event) {
-    // Функция события открывающаяся по клику на изображения в карточках
-    const itemImage = event.target; // "цель" данного события записываю в переменную
-    popupImage.src = itemImage.src; // приравниваю значения SRC у картинки в карточке и у открывшейся картинки.
-    const itemAlt = event.target.alt; // значение alt тега у "цели" события записываю в переменную
-    popupImageDescription.textContent = itemAlt; // значение подписи под фотографией теперь то же что и alt изображения который в свою очередь всегда равен названию карточки
-    popupImage.alt = itemAlt; // значение alt у открывшейся картинки подставляется из значения alt той картинки на которую кликнули
+    const itemImage = event.target;
+    popupImage.src = itemImage.src;
+    const itemAlt = event.target.alt;
+    popupImageDescription.textContent = itemAlt;
+    popupImage.alt = itemAlt;
     openPopup(popupGallery);
 }
 

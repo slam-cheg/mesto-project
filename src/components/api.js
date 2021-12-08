@@ -24,6 +24,17 @@ const getMyProfile = () => {
     }).then(checkResponse);
 };
 
+const updateMyProfile = (name, about) => {
+    return fetch(mainUrl + "users/me", {
+        method: "PATCH",
+        headers: config.headers,
+        body: JSON.stringify({
+            name: `${name}`,
+            about: `${about}`,
+        }),
+    }).then(checkResponse);
+};
+
 const getMyAvatar = (avatar) => {
     return fetch(mainUrl + "users/me/avatar", {
         method: "PATCH",
@@ -63,11 +74,7 @@ const sendLike = (cardId) => {
         body: JSON.stringify({
             _id: `${cardId}`,
         }),
-    })
-        .then(checkResponse)
-        .catch((err) => {
-            console.log(err);
-        });
+    }).then(checkResponse);
 };
 
 const deleteLike = (cardId) => {
@@ -77,7 +84,7 @@ const deleteLike = (cardId) => {
         body: JSON.stringify({
             _id: `${cardId}`,
         }),
-    }).then(checkResponse());
+    }).then(checkResponse);
 };
 
 const checkResponse = (res) => {
@@ -87,4 +94,4 @@ const checkResponse = (res) => {
     return Promise.reject(`Ошибка: ${res.status}`);
 };
 
-export { contentType, token, mainUrl, getInitialCards, getMyProfile, getMyAvatar, sendCards, deleteCards, sendLike, deleteLike, checkResponse };
+export { contentType, token, mainUrl, getInitialCards, getMyProfile, getMyAvatar, sendCards, deleteCards, sendLike, deleteLike, checkResponse, updateMyProfile };

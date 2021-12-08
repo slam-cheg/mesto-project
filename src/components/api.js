@@ -1,4 +1,3 @@
-
 const config = {
     baseUrl: "https://nomoreparties.co/v1/plus-cohort-4/",
     headers: {
@@ -14,111 +13,58 @@ const contentType = config.headers["Content-Type"];
 const getInitialCards = () => {
     return fetch(mainUrl + "cards", {
         method: "GET",
-        headers: {
-            "authorization": token,
-            "Content-Type": contentType["Content-Type"],
-
-        },
-    });
+        headers: config.headers,
+    }).then(checkResponse);
 };
-
 
 const getMyProfile = () => {
     return fetch(mainUrl + "users/me", {
         method: "GET",
-        headers: {
-            "authorization": token,
-            "Content-Type": contentType,
-
-        },
-    });
-};
-
-
-const updateMyProfile = (name, about) => {
-    return fetch(mainUrl + "users/me", {
-        method: "PATCH",
-        headers: {
-            "authorization": token,
-            "Content-Type": contentType,
-
-        },
-        body: JSON.stringify({
-            name: `${name}`,
-            about: `${about}`,
-            _id: "6043356bdb4f546a17e4e66d",
-        }),
-    });
+        headers: config.headers,
+    }).then(checkResponse);
 };
 
 const getMyAvatar = (avatar) => {
     return fetch(mainUrl + "users/me/avatar", {
         method: "PATCH",
-        headers: {
-            "authorization": token,
-            "Content-Type": contentType,
-        },
+        headers: config.headers,
         body: JSON.stringify({
             avatar: `${avatar}`,
         }),
-    });
-};
-
-const getUsers = () => {
-
-    return fetch(mainUrl + "users", {
-        headers: {
-            "authorization": token,
-            "Content-Type": contentType,
-        },
-    });
+    }).then(checkResponse);
 };
 
 const sendCards = (name, link, userId) => {
     return fetch(mainUrl + "cards", {
         method: "POST",
-        headers: {
-            "authorization": token,
-            "Content-Type": contentType,
-        },
+        headers: config.headers,
         body: JSON.stringify({
             name: `${name}`,
             link: `${link}`,
             _id: `${userId}`,
         }),
-    });
+    }).then(checkResponse);
 };
 
 const deleteCards = (cardId) => {
     return fetch(mainUrl + "cards/" + `${cardId}`, {
         method: "DELETE",
-        headers: {
-            "authorization": token,
-            "Content-Type": contentType,
-        },
+        headers: config.headers,
         body: JSON.stringify({
             _id: `${cardId}`,
         }),
-    });
+    }).then(checkResponse);
 };
 
 const sendLike = (cardId) => {
     return fetch(mainUrl + "cards/likes/" + `${cardId}`, {
         method: "PUT",
-        headers: {
-            "authorization": token,
-            "Content-Type": contentType,
-        },
+        headers: config.headers,
         body: JSON.stringify({
             _id: `${cardId}`,
         }),
     })
-        .then((res) => {
-            if (res.ok) {
-                return res.json();
-            }
-            return Promise.reject(`Ошибка: ${res.status}`);
-        })
+        .then(checkResponse)
         .catch((err) => {
             console.log(err);
         });
@@ -127,14 +73,18 @@ const sendLike = (cardId) => {
 const deleteLike = (cardId) => {
     return fetch(mainUrl + "cards/likes/" + `${cardId}`, {
         method: "DELETE",
-        headers: {
-            "authorization": token,
-            "Content-Type": contentType,
-        },
+        headers: config.headers,
         body: JSON.stringify({
             _id: `${cardId}`,
         }),
-    });
+    }).then(checkResponse());
 };
 
-export { getInitialCards, getUsers, getMyId, getMyProfile, getMyAvatar, sendCards, deleteCards, sendLike, deleteLike };
+export const checkResponse = (res) => {
+    if (res.ok) {
+        return res.json();
+    }
+    return Promise.reject(`Ошибка: ${res.status}`);
+};
+
+export { contentType, token, mainUrl, getInitialCards, getMyProfile, getMyAvatar, sendCards, deleteCards, sendLike, deleteLike };

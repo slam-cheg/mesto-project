@@ -3,16 +3,13 @@ import "core-js/stable";
 import "regenerator-runtime/runtime";
 
 import "./index.css";
-import { getInitialCards, getUsers, getMyId, getMyProfile, getMyAvatar, sendCards, deleteCards, sendLike, deleteLike } from "../components/api.js";
+import { contentType, token, mainUrl, getInitialCards, getMyProfile, getMyAvatar, sendCards, deleteCards, sendLike, deleteLike } from "../components/api.js";
 import { setEventListeners, checkInputValidity, showInputError, hideInputError, enableValidation, hasInvalidInput, toggleButtonState, settings } from "../components/validate.js"; // валидация форм
 import { openPopup, closePopup, closeByEscape, handleOverlayClick } from "../components/modal.js";
 import { addLike, renderLoading } from "../components/utils.js";
 import { renderCards, addCard, createCard } from "../components/card";
 import "../images/icon.ico";
 
-updateServerCards();
-getCurrentUser();
-updateProfile();
 enableValidation(settings);
 
 // ОБЪЯВЛЕНИЕ ВСЕХ ПЕРЕМЕННЫХ
@@ -79,8 +76,7 @@ modals.forEach((popup) => {
     popup.addEventListener("click", handleOverlayClick);
 });
 
-
-Promise.all([getInitialCards(config), getMyProfile(config)])
+Promise.all([getInitialCards(), getMyProfile()])
     .then(([cards, userdata]) => {
         currentUserId = userdata._id;
         avatarOld.src = userdata.avatar;
@@ -103,6 +99,7 @@ function handlerAvatarFormSubmit(event) {
     avatarOld.src = newAvatar;
     renderLoading(true, avatarEditButton);
     getMyAvatar(newAvatar)
+        .then(checkResponse)
         .then(() => {
             closePopup(popupAvatar);
         })
@@ -123,12 +120,7 @@ function handlerAddFormSubmit(event) {
     const cardTitle = title.value;
     const cardImage = image.value;
     sendCards(cardTitle, cardImage, currentUserId)
-        .then((res) => {
-            if (res.ok) {
-                return res.json();
-            }
-            return Promise.reject(`Ошибка: ${res.status}`);
-        })
+        .then(checkResponse)
         .then((res) => {
             addCard(cardTitle, cardImage, 0, currentUserId, res._id);
         })
@@ -153,12 +145,7 @@ function handlerEditFormSubmit() {
     closePopup(popupEdit); // функция сохранения информации отработала и при этом попап закрылся, очистки формы не происходит, т.к. в данном случае нет
     renderLoading(true, popupEditButton);
     getMyProfile(profileNameOld.value, profileDescriptionOld.value)
-        .then((res) => {
-            if (res.ok) {
-                return res.json();
-            }
-            return Promise.reject(`Ошибка: ${res.status}`);
-        })
+        .then(checkResponse)
         .catch((err) => {
             console.log(err);
         })
@@ -194,12 +181,7 @@ function deleting() {
     const deletingItemId = deletingItem.id;
     renderLoading(true, confirmButton);
     deleteCards(deletingItemId)
-        .then((res) => {
-            if (res.ok) {
-                return res.json();
-            }
-            return Promise.reject(`Ошибка: ${res.status}`);
-        })
+        .then(checkResponse)
         .catch((err) => {
             console.log(err);
         })

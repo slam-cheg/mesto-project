@@ -3,7 +3,7 @@ import "core-js/stable";
 import "regenerator-runtime/runtime";
 
 import "./index.css";
-import { contentType, token, mainUrl, getInitialCards, getMyProfile, getMyAvatar, sendCards, deleteCards, sendLike, deleteLike } from "../components/api.js";
+import { contentType, token, mainUrl, getInitialCards, getMyProfile, getMyAvatar, sendCards, deleteCards, sendLike, deleteLike, checkResponse } from "../components/api.js";
 import { setEventListeners, checkInputValidity, showInputError, hideInputError, enableValidation, hasInvalidInput, toggleButtonState, settings } from "../components/validate.js"; // валидация форм
 import { openPopup, closePopup, closeByEscape, handleOverlayClick } from "../components/modal.js";
 import { addLike, renderLoading } from "../components/utils.js";
@@ -99,7 +99,6 @@ function handlerAvatarFormSubmit(event) {
     avatarOld.src = newAvatar;
     renderLoading(true, avatarEditButton);
     getMyAvatar(newAvatar)
-        .then(checkResponse)
         .then(() => {
             closePopup(popupAvatar);
         })
@@ -120,9 +119,12 @@ function handlerAddFormSubmit(event) {
     const cardTitle = title.value;
     const cardImage = image.value;
     sendCards(cardTitle, cardImage, currentUserId)
-        .then(checkResponse)
         .then((res) => {
             addCard(cardTitle, cardImage, 0, currentUserId, res._id);
+            closePopup(popupAdd); // форма была отправлена, попап закрывается
+            event.target.reset(); // поля формы очищаются после закрытия попап
+            popupFormButton.classList.add("popup__form-button_disabled");
+            popupFormButton.setAttribute("disabled", true);
         })
         .catch((err) => {
             console.log(err);
@@ -130,11 +132,6 @@ function handlerAddFormSubmit(event) {
         .finally(() => {
             renderLoading(false, popupFormButton);
         });
-
-    closePopup(popupAdd); // форма была отправлена, попап закрывается
-    event.target.reset(); // поля формы очищаются после закрытия попап
-    popupFormButton.classList.add("popup__form-button_disabled");
-    popupFormButton.setAttribute("disabled", true);
 }
 
 //  ОТПРАВКА ФОРМЫ // РЕДАКТИРОВАНИЕ ПРОФИЛЯ
@@ -145,7 +142,6 @@ function handlerEditFormSubmit() {
     closePopup(popupEdit); // функция сохранения информации отработала и при этом попап закрылся, очистки формы не происходит, т.к. в данном случае нет
     renderLoading(true, popupEditButton);
     getMyProfile(profileNameOld.value, profileDescriptionOld.value)
-        .then(checkResponse)
         .catch((err) => {
             console.log(err);
         })
@@ -181,13 +177,16 @@ function deleting() {
     const deletingItemId = deletingItem.id;
     renderLoading(true, confirmButton);
     deleteCards(deletingItemId)
-        .then(checkResponse)
+        .then(() => {
+            deletingItem.remove();
+            closePopup(popupConfirm);
+        })
         .catch((err) => {
             console.log(err);
         })
         .finally(() => {
             renderLoading(false, confirmButton);
         });
-    deletingItem.remove();
-    closePopup(popupConfirm); // попап подтверждения отработал и закрывается
+
+    // попап подтверждения отработал и закрывается
 }

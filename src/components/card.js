@@ -36,7 +36,7 @@ export const createCard = (сardTitle, cardImage, initialLikes, cardOwner, cardI
             }
         });
     } else {
-        likeCount.textContent = 0;
+        likeCount = 0;
     }
 
     cardElement.querySelector(".element__like").addEventListener("click", addLike);

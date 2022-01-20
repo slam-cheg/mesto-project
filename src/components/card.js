@@ -27,6 +27,7 @@ export const createCard = (сardTitle, cardImage, initialLikes, cardOwner, cardI
     cardElement.querySelector(".element__title").textContent = сardTitle;
     cardImg.src = cardImage;
     cardImg.alt = сardTitle;
+    
     if (cardOwner !== currentUserId) {
         bucket.classList.add("element__delete_deactive");
     }
